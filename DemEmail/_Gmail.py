@@ -1,7 +1,7 @@
 import os
 
 from DemEmail import Email
-from Utils.ConfigManager import ConfigManager
+from Utils.configmanager import ConfigManager
 
 
 class Gmail(Email):

@@ -23,7 +23,7 @@ class Email:
 
 if __name__ == "__main__":
     import os
-    from Utils.ConfigManager import ConfigManager
+    from Utils.configmanager import ConfigManager
     # list of email_id to send the mail
     receiver = "***REMOVED***"
     cm = ConfigManager(default_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config'))
