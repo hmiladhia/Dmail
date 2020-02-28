@@ -1,4 +1,7 @@
-class Config:
+from collections import Mapping
+
+
+class Config(Mapping):
     def __init__(self, dict_config, parent=None, name=None):
         if parent:
             self.__load_config(parent)
@@ -28,3 +31,12 @@ class Config:
 
     def __repr__(self):
         return f"Config: {self.__dict__}"
+
+    def __getitem__(self, k):
+        return self.__dict__[k]
+
+    def __len__(self):
+        return len(self.__dict__)
+
+    def __iter__(self):
+        return iter([key for key in self.__dict__ if key and key[0] != "_"])

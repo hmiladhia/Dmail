@@ -16,4 +16,5 @@ if __name__ == "__main__":
     print(conf.__dict__)
     print(conf.mail_port)
     print(conf.get_name())
-    # hello(**conf)
+    hello(**conf)
+    hello(**conf.user_info)
