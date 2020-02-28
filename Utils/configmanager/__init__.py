@@ -18,3 +18,5 @@ if __name__ == "__main__":
     print(conf.get_name())
     hello(**conf)
     hello(**conf.user_info)
+    print(conf[['mail_server', 'mail_port']])
+    print(conf[{'mail_server': "MAIL_SERVER", 'mail_port': 'MAIL_PORT'}])

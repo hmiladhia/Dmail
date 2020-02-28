@@ -2,7 +2,7 @@ from collections import Mapping
 
 
 class Config(Mapping):
-    def __init__(self, dict_config, parent=None, name=None):
+    def __init__(self, dict_config: dict, parent: 'Config' = None, name: str = None):
         if parent:
             self.__load_config(parent)
         if name:
@@ -33,6 +33,11 @@ class Config(Mapping):
         return f"Config: {self.__dict__}"
 
     def __getitem__(self, k):
+        if isinstance(k, dict):
+            return Config({name: self[key] for key, name in k.items()})
+        elif not (isinstance(k, str)) and hasattr(k, '__iter__'):
+            return Config({key: self[key] for key in k})
+
         return self.__dict__[k]
 
     def __len__(self):
