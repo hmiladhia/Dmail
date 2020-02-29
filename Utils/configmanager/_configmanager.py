@@ -15,10 +15,12 @@ class ConfigManager:
         parent_config = self.__load_parent_config(config_dict)
         return Config(config_dict, parent_config, config_name)
 
-    def export_config_file(self, obj, config_name=None, path=None):
+    def export_config_file(self, obj, config_name=None, path=None, **kwargs):
         config_path = self.__get_config_path(config_name if config_name else obj.__class__.__name__, path)
+        config_dict = obj.to_dict()
+        config_dict['__name'] = config_name
         with open(config_path, 'w') as config_file:
-            json.dump(obj.__dict__, config_file)
+            json.dump(config_dict, config_file, indent=kwargs.get('indent', 2))
 
     def __read_config_file(self, config_name, path=None):
         config_path = self.__get_config_path(config_name, path)
