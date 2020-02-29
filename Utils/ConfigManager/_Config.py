@@ -3,7 +3,7 @@ from collections import MutableMapping
 
 class Config(MutableMapping):
     def __init__(self, config_dict: dict, parent: 'Config' = None, name: str = None):
-        self.config_dict = dict()
+        self.__config_dict = dict()
         self.__parent = parent
         self.__load_config_dict(config_dict)
         if name:
@@ -13,7 +13,7 @@ class Config(MutableMapping):
         return self.__name
 
     def to_dict(self):
-        d = {self.__reverse_parse_key(k): self.__reverse_parse_value(v) for k, v in self.config_dict.items()}
+        d = {self.__reverse_parse_key(k): self.__reverse_parse_value(v) for k, v in self.__config_dict.items()}
         if self.__parent:
             d['__parent'] = self.__parent.get_name()
         return d
@@ -21,7 +21,7 @@ class Config(MutableMapping):
     def set_value(self, key, value):
         key = self.__parse_key(key)
         value = self.__parse_value(value, key)
-        self.config_dict[key] = value
+        self.__config_dict[key] = value
 
     def __load_config_dict(self, dict_config):
         for key, value in dict_config.items():
@@ -34,7 +34,13 @@ class Config(MutableMapping):
         try:
             return self[item]
         except KeyError:
-            raise AttributeError
+            return super(Config, self).__getattr__(item)
+
+    def __setattr__(self, key, value):
+        if not key.startswith(self.__private_prefix):
+            self.set_value(key, value)
+        else:
+            return super(Config, self).__setattr__(key, value)
 
     def __getitem__(self, k):
         if isinstance(k, dict):
@@ -56,21 +62,21 @@ class Config(MutableMapping):
         if not sub_attributes:
             raise ValueError
         if len(sub_attributes) > 1:
-            return self.config_dict[sub_attributes[0]].__get_single_item(sub_attributes[1:])
+            return self.__config_dict[sub_attributes[0]].__get_single_item(sub_attributes[1:])
         else:
-            return self.config_dict[sub_attributes[0]]
+            return self.__config_dict[sub_attributes[0]]
 
     def __setitem__(self, k, v) -> None:
         self.set_value(k, v)
 
     def __delitem__(self, v) -> None:
-        del self.config_dict[v]
+        del self.__config_dict[v]
 
     def __len__(self):
-        return len(self.config_dict)
+        return len(self.__config_dict)
 
     def __iter__(self):
-        keys = [key for key in self.config_dict if key and key[0] != "_"]
+        keys = [key for key in self.__config_dict if key and not key.startswith(self.__private_prefix)]
         if self.__parent:
             keys.extend([el for el in self.__parent])
         return iter(keys)
