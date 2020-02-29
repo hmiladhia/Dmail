@@ -43,12 +43,22 @@ class Config(MutableMapping):
             return Config({key: self[key] for key in k})
 
         try:
-            return self.config_dict[k]
+            return self.__get_single_item(k)
         except KeyError:
             if self.__parent:
-                return getattr(self.__parent, k)
+                return self.__parent.__get_single_item(k)
             else:
                 raise KeyError
+
+    def __get_single_item(self, sub_attributes):
+        if isinstance(sub_attributes, str):
+            sub_attributes = sub_attributes.split('.')
+        if not sub_attributes:
+            raise ValueError
+        if len(sub_attributes) > 1:
+            return self.config_dict[sub_attributes[0]].__get_single_item(sub_attributes[1:])
+        else:
+            return self.config_dict[sub_attributes[0]]
 
     def __setitem__(self, k, v) -> None:
         self.set_value(k, v)
