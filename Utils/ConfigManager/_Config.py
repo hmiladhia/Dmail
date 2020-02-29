@@ -1,31 +1,40 @@
-from collections import Mapping
+from collections import MutableMapping
 
 
-class Config(Mapping):
-    def __init__(self, dict_config: dict, parent: 'Config' = None, name: str = None):
-        if parent:
-            self.__load_config(parent)
+class Config(MutableMapping):
+    def __init__(self, config_dict: dict, parent: 'Config' = None, name: str = None):
+        self.config_dict = dict()
+        self.__parent = parent
+        self.__load_config_dict(config_dict)
         if name:
-            self.__name = name
-        self.__load_config_dict(dict_config)
+            self.set_value('__name', name)
 
     def get_name(self):
         return self.__name
 
     def to_dict(self):
-        return {self.__reverse_parse_key(k): self.__reverse_parse_value(v) for k, v in self.__dict__.items()}
+        d = {self.__reverse_parse_key(k): self.__reverse_parse_value(v) for k, v in self.config_dict.items()}
+        if self.__parent:
+            d['__parent'] = self.__parent.get_name()
+        return d
+
+    def set_value(self, key, value):
+        key = self.__parse_key(key)
+        value = self.__parse_value(value, key)
+        self.config_dict[key] = value
 
     def __load_config_dict(self, dict_config):
         for key, value in dict_config.items():
-            key = self.__parse_key(key)
-            value = self.__parse_value(value, key)
-            setattr(self, key, value)
-
-    def __load_config(self, config):
-        return self.__load_config_dict(config.to_dict())
+            self.set_value(key, value)
 
     def __repr__(self):
         return f"Config: {self.to_dict()}"
+
+    def __getattr__(self, item):
+        try:
+            return self[item]
+        except KeyError:
+            raise AttributeError
 
     def __getitem__(self, k):
         if isinstance(k, dict):
@@ -33,13 +42,28 @@ class Config(Mapping):
         elif not (isinstance(k, str)) and hasattr(k, '__iter__'):
             return Config({key: self[key] for key in k})
 
-        return self.__dict__[k]
+        try:
+            return self.config_dict[k]
+        except KeyError:
+            if self.__parent:
+                return getattr(self.__parent, k)
+            else:
+                raise KeyError
+
+    def __setitem__(self, k, v) -> None:
+        self.set_value(k, v)
+
+    def __delitem__(self, v) -> None:
+        del self.config_dict[v]
 
     def __len__(self):
-        return len(self.__dict__)
+        return len(self.config_dict)
 
     def __iter__(self):
-        return iter([key for key in self.__dict__ if key and key[0] != "_"])
+        keys = [key for key in self.config_dict if key and key[0] != "_"]
+        if self.__parent:
+            keys.extend([el for el in self.__parent])
+        return iter(keys)
 
     __private_prefix = f'_{__qualname__}'
 
