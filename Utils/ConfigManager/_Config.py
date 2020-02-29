@@ -20,12 +20,6 @@ class Config(Mapping):
             else:
                 setattr(self, key, value)
 
-    @staticmethod
-    def __parse_value(value, name=None):
-        if type(value) == dict:
-            return Config(value, name=name)
-        return value
-
     def __load_config(self, config):
         return self.__load_config_dict(config.__dict__)
 
@@ -45,3 +39,11 @@ class Config(Mapping):
 
     def __iter__(self):
         return iter([key for key in self.__dict__ if key and key[0] != "_"])
+
+    @classmethod
+    def __parse_value(cls, value, name=None):
+        if type(value) == dict:
+            return Config(value, name=name)
+        elif not (isinstance(value, str)) and hasattr(value, '__iter__'):
+            return [cls.__parse_value(p) for p in value]
+        return value
