@@ -1,3 +1,4 @@
+from os import environ
 from collections import MutableMapping
 
 
@@ -53,10 +54,15 @@ class Config(MutableMapping):
         except KeyError:
             if self.__parent:
                 return self.__parent.__get_single_item(k)
-            else:
-                raise KeyError
+            raise KeyError
 
     def __get_single_item(self, sub_attributes):
+        value = self.__get_raw_single_item(sub_attributes)
+        if isinstance(value, str):
+            value = value.format(os_environ=environ)
+        return value
+
+    def __get_raw_single_item(self, sub_attributes):
         if isinstance(sub_attributes, str):
             sub_attributes = sub_attributes.split('.')
         if not sub_attributes:
