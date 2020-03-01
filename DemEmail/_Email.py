@@ -19,17 +19,3 @@ class Email:
         if subject:
             message = 'Subject: {}\n\n{}'.format(subject, message)
         self.server.sendmail(self.sender_email_id, receiver_id, message.encode("utf8"))
-
-
-if __name__ == "__main__":
-    import os
-    from Utils.configmanager import ConfigManager
-    # list of email_id to send the mail
-    receiver = "***REMOVED***"
-    cm = ConfigManager(default_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config'))
-    config = cm.load_config('GmailConfig')
-    email_id = os.environ.get('mail')
-    password = os.environ.get('pass')
-    with Email(**config, sender_email_id=email_id, sender_email_id_password=password) as gmail:
-        gmail.send_message("Love1", receiver, "I love you man")
-        gmail.send_message("Love2", receiver, "I love you man")

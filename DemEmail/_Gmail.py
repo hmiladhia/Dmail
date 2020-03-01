@@ -10,14 +10,3 @@ class Gmail(Email):
         config = cm.load_config('GmailConfig')
         super(Gmail, self).__init__(**config, sender_email_id=sender_email_id,
                                     sender_email_id_password=sender_email_id_password)
-
-
-if __name__ == "__main__":
-    # list of email_id to send the mail
-    receiver = "***REMOVED***"
-    email_id = os.environ.get('mail')
-    password = os.environ.get('pass')
-    with Gmail(email_id, password) as gmail:
-        gmail.send_message("Love1", receiver, "I love you man")
-        gmail.send_message("Love2", receiver, "I love you man")
-
