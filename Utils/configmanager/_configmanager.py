@@ -1,37 +1,39 @@
 import json
-import os
 
 from pathlib import Path
 
-from Utils.configmanager._config import Config
+from Utils.configmanager import Config
+from Utils.configmanager import import_config
 
 
 class ConfigManager:
-    def __init__(self, default_path=None):
-        self.default_path = Path(default_path) if default_path else Path(os.getcwd())
-
-    def load_config(self, config_name, path=None):
-        config_dict = self.__read_config_file(config_name, path)
-        parent_config = self.__load_parent_config(config_dict)
+    @classmethod
+    def load_config(cls, config_name, path):
+        config_dict = cls.__read_config_file(config_name, path)
+        parent_config = cls.__load_parent_config(config_dict, path)
         return Config(config_dict, parent_config, config_name)
 
-    def export_config_file(self, obj, config_name=None, path=None, **kwargs):
-        config_path = self.__get_config_path(config_name if config_name else obj.__class__.__name__, path)
+    @classmethod
+    def export_config_file(cls, obj, config_name=None, path=None, **kwargs):
+        config_path = cls.__get_config_path(config_name if config_name else obj.__class__.__name__, path)
         config_dict = obj.to_dict()
         config_dict['__name'] = config_name
         with open(config_path, 'w') as config_file:
             json.dump(config_dict, config_file, indent=kwargs.get('indent', 2))
 
-    def __read_config_file(self, config_name, path=None):
-        config_path = self.__get_config_path(config_name, path)
+    @classmethod
+    def __read_config_file(cls, config_name, path):
+        config_path = cls.__get_config_path(config_name, path)
         with open(config_path, 'r') as config_file:
             config_dict = json.load(config_file)
         return config_dict
 
-    def __load_parent_config(self, config_dict, path=None):
+    @classmethod
+    def __load_parent_config(cls, config_dict, path):
         parent_name = config_dict.get('__parent', None)
-        return self.load_config(parent_name, config_dict.get('__parent_path', None)) if parent_name else path
+        parent_path = config_dict.get('__parent_path', None)
+        return import_config(parent_name, parent_path if parent_path else path) if parent_name else None
 
-    def __get_config_path(self, config_name, path):
-        path = self.default_path if path is None else Path(path)
-        return path / (config_name + '.json')
+    @staticmethod
+    def __get_config_path(config_name, path):
+        return Path(path) / (config_name + '.json')
