@@ -1,3 +1,6 @@
+import re
+import warnings
+
 from os import environ
 from collections import MutableMapping
 
@@ -23,6 +26,20 @@ class Config(MutableMapping):
         key = self.__parse_key(key)
         value = self.__parse_value(value, key)
         self.__config_dict[key] = value
+
+    def format_string(self, text, regex=None):
+        if regex is None:
+            regex = r"{(.*?)}"
+        matches = re.finditer(regex, text, re.MULTILINE | re.DOTALL)
+
+        for matchNum, match in enumerate(matches):
+            for groupNum in range(0, len(match.groups())):
+                try:
+                    value = self[match.group(1)]
+                except KeyError:
+                    value = match.group(0)
+                text = re.sub(match.group(0), value, text)
+        return text
 
     def __load_config_dict(self, dict_config):
         for key, value in dict_config.items():
@@ -59,7 +76,12 @@ class Config(MutableMapping):
     def __get_single_item(self, sub_attributes):
         value = self.__get_raw_single_item(sub_attributes)
         if isinstance(value, str):
-            value = value.format(os_environ=environ)
+            try:
+                value = self.format_string(value).format(os_environ=environ)
+            except RecursionError:
+                warnings.warn('Two config entries are calling each other: the raw value was used')
+            except KeyError:
+                warnings.warn('Key not found: the raw value was used')
         return value
 
     def __get_raw_single_item(self, sub_attributes):
