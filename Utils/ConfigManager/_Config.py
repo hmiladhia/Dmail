@@ -104,9 +104,9 @@ class Config(MutableMapping):
         return len(self.__config_dict)
 
     def __iter__(self):
-        keys = [key for key in self.__config_dict if key and not key.startswith(self.__private_prefix)]
+        keys = {key for key in self.__config_dict if key and not key.startswith(self.__private_prefix)}
         if self.__parent:
-            keys.extend([el for el in self.__parent])
+            keys.update(self.__parent)
         return iter(keys)
 
     __private_prefix = f'_{__qualname__}'
