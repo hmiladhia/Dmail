@@ -52,7 +52,7 @@ class Config(MutableMapping):
         try:
             return self[item]
         except KeyError:
-            return super(Config, self).__getattr__(item)
+            raise AttributeError
 
     def __setattr__(self, key, value):
         if not key.startswith(self.__private_prefix):
