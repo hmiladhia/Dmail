@@ -1,6 +1,6 @@
 import os
 
-from DemEmail import Email
+from Dmail import Email
 from Utils.configmanager import ConfigManager
 
 

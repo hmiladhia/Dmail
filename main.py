@@ -1,5 +1,5 @@
 import os
-from DemEmail import Gmail
+from Dmail import Gmail
 
 # list of email_id to send the mail
 receiver = "xxx@gmail.com"
