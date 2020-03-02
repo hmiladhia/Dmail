@@ -3,7 +3,6 @@ import json
 from pathlib import Path
 
 from Utils.configmanager import Config
-from Utils.configmanager import import_config
 
 
 class ConfigManager:
@@ -32,8 +31,10 @@ class ConfigManager:
     def __load_parent_config(cls, config_dict, path):
         parent_name = config_dict.get('__parent', None)
         parent_path = config_dict.get('__parent_path', None)
-        return import_config(parent_name, parent_path if parent_path else path) if parent_name else None
+        return cls.import_config(parent_name, parent_path if parent_path else path) if parent_name else None
 
     @staticmethod
     def __get_config_path(config_name, path):
         return Path(path) / (config_name + '.json')
+
+    import_config = load_config
