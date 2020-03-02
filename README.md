@@ -18,7 +18,7 @@ python -m pip install Dmail
 import os
 from Dmail import Gmail
 
-# list of email_id to send the mail
+# email info
 receiver_email = "xxx@gmail.com"
 sender_email = os.environ.get('mail')
 password = os.environ.get('pass')
