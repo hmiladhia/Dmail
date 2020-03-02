@@ -31,6 +31,3 @@ with Gmail(sender_email, password) as gmail:
     gmail.send_message(message, receiver_email, "Subject")
 
 ```
-
-p.s. you are welcome to p
-
