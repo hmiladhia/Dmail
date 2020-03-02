@@ -33,3 +33,6 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
+/build/*
+/dist/*
+/Dmail.egg-info/*
