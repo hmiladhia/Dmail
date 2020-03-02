@@ -1,9 +1,7 @@
 from Dmail import Email
-from Utils.configmanager import import_config
 
 
 class Gmail(Email):
-    def __init__(self, sender_email_id, sender_email_id_password):
-        config = import_config('Dmail.config.GmailConfig')
-        super(Gmail, self).__init__(**config, sender_email_id=sender_email_id,
-                                    sender_email_id_password=sender_email_id_password)
+    def __init__(self, sender_email, sender_password):
+        super(Gmail, self).__init__(mail_server="smtp.gmail.com", mail_port=587,
+                                    sender_email=sender_email, sender_password=sender_password)
