@@ -21,7 +21,20 @@ class Email:
         return self
 
     def __exit__(self, type, value, traceback):
+        self.message = None
         self.server.quit()
+
+    def add_attachments(self, attachments, *args, **kwargs):
+        if isinstance(attachments, str):
+            self.add_attachment(attachments, *args, **kwargs)
+        elif isinstance(attachments, dict):
+            for filename, path in attachments.items():
+                self.add_attachment(path, filename)
+        elif hasattr(attachments, '__iter__'):
+            for file_path in attachments:
+                self.add_attachment(file_path)
+        else:
+            raise TypeError('attachments should either be of type str, dict or list')
 
     def add_attachment(self, file_path, filename=None):
         with open(file_path, "rb") as attachment:
@@ -40,11 +53,15 @@ class Email:
 
         self.message.attach(part)
 
-    def send_message(self, message, receiver_email, subject=None, bcc=None):
-        self.message["To"] = receiver_email
+    def _add_message(self, message, subtype):
+        self.message.attach(MIMEText(message, subtype))
+
+    def send_message(self, message, receiver_email, subject=None, bcc=None, subtype='plain', attachments=None):
         if subject:
             self.message["Subject"] = subject
         if bcc:
-            self.message["Bcc"] = bcc  # Recommended for mass emails
-        self.message.attach(MIMEText(message, "plain"))
+            self.message["Bcc"] = bcc
+        self._add_message(message, subtype)
+        if attachments:
+            self.add_attachments(attachments)
         self.server.sendmail(self.sender_email, receiver_email, self.message.as_string())
