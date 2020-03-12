@@ -58,15 +58,7 @@ class Email:
     def add_message(self, message, subtype):
         if subtype == 'md':
             subtype = 'html'
-            message = f"""
-                    <!doctype html>
-                    <html>
-                        <head>
-                        </head>
-                        <body>
-                            {markdown2.markdown(message)}
-                        </body>
-                    </html>"""
+            message = markdown2.markdown(message)
         self.message.attach(MIMEText(message, subtype))
 
     def send_message(self, message, receiver_email, subject=None, cc=None, bcc=None, subtype='plain', attachments=None):
