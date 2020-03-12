@@ -56,9 +56,11 @@ class Email:
     def _add_message(self, message, subtype):
         self.message.attach(MIMEText(message, subtype))
 
-    def send_message(self, message, receiver_email, subject=None, bcc=None, subtype='plain', attachments=None):
+    def send_message(self, message, receiver_email, subject=None, cc=None, bcc=None, subtype='plain', attachments=None):
         if subject:
             self.message["Subject"] = subject
+        if cc:
+            self.message['cc'] = cc
         if bcc:
             self.message["Bcc"] = bcc
         self._add_message(message, subtype)
