@@ -36,6 +36,10 @@ with Gmail(sender_email, password) as gmail:
 message = """
 # Email Content
 This is a **test**
+
+![test image](tests/another_image.png)
+
+this is some other text
 """
 
 with Gmail(sender_email, password) as gmail:

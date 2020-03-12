@@ -10,7 +10,7 @@ message = """
 # Email Content
 This is a **test**
 
-![test image](tests/another_image.png)
+![test image](tests/another_image.jpg)
 
 this is some other text
 """
