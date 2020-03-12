@@ -6,6 +6,8 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+import markdown2
+
 
 class Email:
     def __init__(self, mail_server, mail_port, sender_email=None, sender_password=None, mail_use_tls=True):
@@ -53,7 +55,18 @@ class Email:
 
         self.message.attach(part)
 
-    def _add_message(self, message, subtype):
+    def add_message(self, message, subtype):
+        if subtype == 'md':
+            subtype = 'html'
+            message = f"""
+                    <!doctype html>
+                    <html>
+                        <head>
+                        </head>
+                        <body>
+                            {markdown2.markdown(message)}
+                        </body>
+                    </html>"""
         self.message.attach(MIMEText(message, subtype))
 
     def send_message(self, message, receiver_email, subject=None, cc=None, bcc=None, subtype='plain', attachments=None):
@@ -63,7 +76,7 @@ class Email:
             self.message['cc'] = cc
         if bcc:
             self.message["Bcc"] = bcc
-        self._add_message(message, subtype)
+        self.add_message(message, subtype)
         if attachments:
             self.add_attachments(attachments)
         self.server.sendmail(self.sender_email, receiver_email, self.message.as_string())
