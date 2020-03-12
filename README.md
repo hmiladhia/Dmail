@@ -18,7 +18,7 @@ python -m pip install Dmail
 
 ```python
 import os
-from Dmail import Gmail
+from Dmail import Gmail, Hotmail
 
 # email info
 receiver_email = "xxx@gmail.com"
