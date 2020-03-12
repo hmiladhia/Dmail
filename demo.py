@@ -11,4 +11,5 @@ message = """
 """
 
 with Gmail(sender_email, password) as gmail:
+    gmail.add_attachment(r"tests\test_image.jpg", "another_name.jpg")
     gmail.send_message(message, receiver_email, "Subject")
