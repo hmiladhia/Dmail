@@ -2,6 +2,8 @@
 
 This is a simple package that provides a simple way to send emails through code.
 
+It has the possibility to send markdown content ( that is converted to html )
+
 ![Steins;Gate](https://media.giphy.com/media/jGJWV3AnjiC4M/giphy.gif)
 
 ## Installation
@@ -29,5 +31,16 @@ message = """
 
 with Gmail(sender_email, password) as gmail:
     gmail.send_message(message, receiver_email, "Subject")
+
+# Send Markdown e-mails :
+message = """
+# Email Content
+This is a **test**
+"""
+
+with Gmail(sender_email, password) as gmail:
+    gmail.add_attachment(r"tests\test_image.jpg", "another_name.jpg")
+    gmail.send_message(message, receiver_email, "Subject", subtype='md')
+
 
 ```
