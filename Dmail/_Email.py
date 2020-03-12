@@ -1,15 +1,20 @@
 import os
 import smtplib
+import re
+import uuid
 
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 
 import markdown2
 
 
 class Email:
+    _img_regex = re.compile(r"(!\[.*?\]\()(.*?)(\))")
+
     def __init__(self, mail_server, mail_port, sender_email=None, sender_password=None, mail_use_tls=True):
         self.server = smtplib.SMTP(mail_server, mail_port)
         self.sender_email = sender_email
@@ -20,6 +25,7 @@ class Email:
         self.server.login(self.sender_email, self.sender_password)
         self.message = MIMEMultipart()
         self.message["From"] = self.sender_email
+        self.sess_uuid = uuid.uuid1()
         return self
 
     def __exit__(self, type, value, traceback):
@@ -52,12 +58,24 @@ class Email:
             "Content-Disposition",
             f"attachment; filename= {filename or os.path.basename(file_path)}",
         )
-
         self.message.attach(part)
 
+    def _add_image(self, img_path):
+        path = os.path.abspath(img_path)
+        with open(path, 'rb') as fp:
+            img = MIMEImage(fp.read())
+
+        img_uuid = str(uuid.uuid3(self.sess_uuid, path))
+        img.add_header('Content-ID', f"<{img_uuid}>")
+        self.message.attach(img)
+        return img_uuid
+    
     def add_message(self, message, subtype):
         if subtype == 'md':
             subtype = 'html'
+            message = self._img_regex.sub(lambda match:
+                                          f"{match.group(1)}cid:{self._add_image(match.group(2))}{match.group(3)}",
+                                          message)
             message = markdown2.markdown(message)
         self.message.attach(MIMEText(message, subtype))
 
