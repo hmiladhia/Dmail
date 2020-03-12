@@ -11,7 +11,7 @@ with open("README.md", "r") as fh:
 try:
     setuptools.setup(long_description=long_description, **conf)
 finally:
-	gversion, version = conf.version.rsplit('.', 1)
-	version = int(version) + 1
-	conf.version = f"{gversion}.{version}"
+    gversion, version = conf.version.rsplit('.', 1)
+    version = int(version) + 1
+    conf.version = f"{gversion}.{version}"
     ConfigManager.export_config_file(conf, 'VersionConfig', os.path.join(os.getcwd(), 'PackageConfigs'))
