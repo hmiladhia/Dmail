@@ -1,5 +1,5 @@
 import os
-from Dmail import Gmail
+from Dmail.esp import Gmail
 
 # email info
 receiver_email = "xxx@gmail.com"

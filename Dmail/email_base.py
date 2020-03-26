@@ -1,6 +1,5 @@
 import os
 import smtplib
-import re
 import uuid
 
 from email import encoders
@@ -9,26 +8,23 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
-import markdown2
 
-
-class Email:
-    _img_regex = re.compile(r"(!\[.*?\]\()(.*?)(\))")
-
+class EmailBase:
     def __init__(self, mail_server, mail_port, sender_email=None, sender_password=None, mail_use_tls=True):
         self.server = smtplib.SMTP(mail_server, mail_port)
         self.sender_email = sender_email
         self.sender_password = sender_password
+        self.mail_use_tls = mail_use_tls
 
-    def __enter__(self):
+    def __enter__(self, sender_email=None, sender_password=None):
         self.server.starttls()
-        self.server.login(self.sender_email, self.sender_password)
+        self.server.login(sender_email or self.sender_email, sender_password or self.sender_password)
         self.message = MIMEMultipart()
         self.message["From"] = self.sender_email
         self.sess_uuid = uuid.uuid1()
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.message = None
         self.server.quit()
 
@@ -60,7 +56,7 @@ class Email:
         )
         self.message.attach(part)
 
-    def _add_image(self, img_path):
+    def add_image(self, img_path):
         path = os.path.abspath(img_path)
         with open(path, 'rb') as fp:
             img = MIMEImage(fp.read())
@@ -69,15 +65,13 @@ class Email:
         img.add_header('Content-ID', f"<{img_uuid}>")
         self.message.attach(img)
         return img_uuid
-    
+
     def add_message(self, message, subtype):
-        if subtype == 'md':
-            subtype = 'html'
-            message = self._img_regex.sub(lambda match:
-                                          f"{match.group(1)}cid:{self._add_image(match.group(2))}{match.group(3)}",
-                                          message)
-            message = markdown2.markdown(message)
+        message, subtype = self._process_message(message, subtype)
         self.message.attach(MIMEText(message, subtype))
+
+    def _process_message(self, message, subtype):
+        return message, subtype
 
     def send_message(self, message, receiver_email, subject=None, cc=None, bcc=None, subtype='plain', attachments=None):
         if subject:

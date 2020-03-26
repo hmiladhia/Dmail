@@ -18,7 +18,7 @@ python -m pip install Dmail
 
 ```python
 import os
-from Dmail import Gmail, Hotmail
+from Dmail.esp import Gmail, Hotmail
 
 # email info
 receiver_email = "xxx@gmail.com"
@@ -45,6 +45,4 @@ this is some other text
 with Gmail(sender_email, password) as gmail:
     gmail.add_attachment(r"tests\test_image.jpg", "another_name.jpg")
     gmail.send_message(message, receiver_email, "Subject", subtype='md')
-
-
 ```
