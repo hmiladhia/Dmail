@@ -3,8 +3,8 @@ from Dmail.esp import Gmail
 
 # email info
 receiver_email = "xxx@gmail.com"
-sender_email = os.environ.get('mail')
-password = os.environ.get('pass')
+sender_email = os.environ.get('email')
+password = os.environ.get('password')
 
 message = """
 # Email Content
@@ -28,5 +28,4 @@ this is some other text
 """
 
 with Gmail(sender_email, password) as gmail:
-    gmail.add_attachment(r"tests\test_image.jpg", "another_name.jpg")
-    gmail.send_message(message, receiver_email, subject="[Dmail] Demo")
+    gmail.send_message(message, receiver_email, subject="[Dmail] Markdown Demo", attachments=r"tests\test_image.jpg")
