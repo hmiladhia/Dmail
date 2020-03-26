@@ -12,7 +12,7 @@ class Email(EmailBase):
                  mail_use_tls=True, md_extensions=None):
         super().__init__(mail_server=mail_server, mail_port=mail_port, sender_email=sender_email,
                          sender_password=sender_password, mail_use_tls=mail_use_tls)
-        self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code'])
+        self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes'])
 
     def _process_message(self, message, subtype):
         if subtype == 'md':
