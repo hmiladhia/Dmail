@@ -68,6 +68,9 @@ class EmailBase:
 
     def add_message(self, message, subtype):
         message, subtype = self._process_message(message, subtype)
+        self._add_message(message, subtype)
+
+    def _add_message(self, message, subtype):
         self.message.attach(MIMEText(message, subtype))
 
     def _process_message(self, message, subtype):

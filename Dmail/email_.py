@@ -16,4 +16,4 @@ class Email(EmailBase):
                                           f"{match.group(1)}cid:{self.add_image(match.group(2))}{match.group(3)}",
                                           message)
             message = self._markdown.convert(message)
-        super(Email, self)._process_message(message, subtype)
+        return super(Email, self)._process_message(message, subtype)
