@@ -61,3 +61,11 @@ def test_email_send_footnote(dmail, config, mocker):
     message = '[^1]: This is a footnote content.'
     dmail.send_message(message, config.receiver, 'Footnote')
     mocked_add_msg.assert_called_with(String(r'.*<div class="footnote">.*</div>.*', re.S), 'html')
+
+
+def test_email_send_image(dmail, config, mocker):
+    mocked_add_msg = mocker.spy(dmail, '_add_message')
+    message = '![test image](another_image.jpg)'
+    dmail.send_message(message, config.receiver, 'Footnote')
+    uuid_regex = r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+    mocked_add_msg.assert_called_with(String(f'.*<img alt="test image" src="cid:{uuid_regex}" />.*'), 'html')
