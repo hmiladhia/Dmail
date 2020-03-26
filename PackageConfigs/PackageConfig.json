@@ -6,8 +6,8 @@
   "description": "This is a simple package that provides a quick way to send emails through code.",
   "long_description_content_type": "text/markdown",
   "url": "https://github.com/hmiladhia/Dmail",
-  "packages": ["Dmail"],
-  "install_requires": ["markdown2"],
+  "packages": ["Dmail", "Dmail.esp"],
+  "install_requires": ["markdown"],
   "classifiers": [ 
     "Programming Language :: Python :: 3", 
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)", 
