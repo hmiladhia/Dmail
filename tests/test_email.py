@@ -22,7 +22,7 @@ def dmail(config, mocker):
 def test_email_send_md(dmail, config, mocker):
     mocked_add_msg = mocker.patch.object(dmail, '_add_message', autospec=True)
     message, subject = 'abc', 'subject'
-    dmail.send_message(message, config.receiver, 'hello', subtype='md')
+    dmail.send_message(message, config.receiver, 'hello')
     mocked_add_msg.assert_called_with(f'<p>{message}</p>', 'html')
 
 
@@ -32,5 +32,25 @@ def test_email_send_table(dmail, config, mocker):
                '| :------: | :------- | -------- |''\n'
                '| Content1 | Content2 | Content3 |''\n')
 
-    dmail.send_message(message, config.receiver, 'hello', subtype='md')
+    dmail.send_message(message, config.receiver, 'hello')
     mocked_add_msg.assert_called_with(String(r'<table>.*</table>', re.S), 'html')
+
+
+def test_email_send_code(dmail, config, mocker):
+    mocked_add_msg = mocker.patch.object(dmail, '_add_message', autospec=True)
+    message = ('```''\n'
+               'def hello():''\n'
+               '    return True''\n'
+               '```')
+    dmail.send_message(message, config.receiver, 'hello')
+    mocked_add_msg.assert_called_with(String(r'.*<code>.*</code>.*', re.S), 'html')
+
+
+def test_email_send_python_code(dmail, config, mocker):
+    mocked_add_msg = mocker.patch.object(dmail, '_add_message', autospec=True)
+    message = ('```python''\n'
+               'def hello():''\n'
+               '    return True''\n'
+               '```')
+    dmail.send_message(message, config.receiver, 'hello')
+    mocked_add_msg.assert_called_with(String(r'.*<code class="python">.*</code>.*', re.S), 'html')
