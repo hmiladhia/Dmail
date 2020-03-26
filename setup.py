@@ -1,17 +1,12 @@
-import setuptools
 import os
+import setuptools
 
-from configDmanager import import_config, ConfigManager
+from configDmanager import import_config, update_config
+
+test = os.environ.get('Test', 'True') == 'True'
 
 conf = import_config('PackageConfigs.VersionConfig')
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+setuptools.setup(**conf)
 
-try:
-    setuptools.setup(long_description=long_description, **conf)
-finally:
-    gversion, version = conf.version.rsplit('.', 1)
-    version = int(version) + 1
-    conf.version = f"{gversion}.{version}"
-    ConfigManager.export_config_file(conf, 'VersionConfig', os.path.join(os.getcwd(), 'PackageConfigs'))
+update_config(lambda c: {'__version.__patch': c['__version.__patch'] + 1 * (not test)}, 'PackageConfigs.VersionConfig')
