@@ -6,8 +6,8 @@ from Dmail.email_base import EmailBase
 
 
 class Email(EmailBase):
-    _img_regex = re.compile(r"(!\[.*?\]\()(.*?)(\))")
-    _markdown = markdown.Markdown(extensions=[])
+    _img_regex = re.compile(r'(!\[.*?\]\()(.*?)(\))')
+    _markdown = markdown.Markdown(extensions=['tables'])
 
     def _process_message(self, message, subtype):
         if subtype == 'md':

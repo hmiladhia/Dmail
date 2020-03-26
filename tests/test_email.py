@@ -1,7 +1,10 @@
+import re
 import pytest
 
 from Dmail import Email
 from configDmanager import import_config
+
+from tests.mock_helper import String
 
 
 @pytest.fixture(scope='session')
@@ -21,3 +24,13 @@ def test_email_send_md(dmail, config, mocker):
     message, subject = 'abc', 'subject'
     dmail.send_message(message, config.receiver, 'hello', subtype='md')
     mocked_add_msg.assert_called_with(f'<p>{message}</p>', 'html')
+
+
+def test_email_send_table(dmail, config, mocker):
+    mocked_add_msg = mocker.patch.object(dmail, '_add_message', autospec=True)
+    message = ('| Collumn1 | Collumn2 | Collumn3 |''\n'
+               '| :------: | :------- | -------- |''\n'
+               '| Content1 | Content2 | Content3 |''\n')
+
+    dmail.send_message(message, config.receiver, 'hello', subtype='md')
+    mocked_add_msg.assert_called_with(String(r'<table>.*</table>', re.S), 'html')
