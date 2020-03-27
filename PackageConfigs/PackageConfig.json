@@ -4,6 +4,7 @@
   "author": "Dhia Hmila",
   "author_email": "hmiladhia@hotmail.fr",
   "description": "This is a simple package that provides a quick way to send emails through code.",
+  "long_description": "${read_file[README.md]}",
   "long_description_content_type": "text/markdown",
   "url": "https://github.com/hmiladhia/Dmail",
   "packages": ["Dmail", "Dmail.esp"],
