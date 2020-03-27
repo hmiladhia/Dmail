@@ -1,5 +1,11 @@
 {
   "__name": "VersionConfig",
   "__parent": "PackageConfig",
-  "version": "0.2.0"
+  "__type": "json",
+  "__version": {
+    "__major": 0,
+    "__minor": 2,
+    "__patch": 0
+  },
+  "version": "${__version.__major}.${__version.__minor}.${__version.__patch}"
 }
