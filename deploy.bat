@@ -1,4 +1,4 @@
-@ECHO off
+@ECHO OFF
 
 CALL :TESTS && CALL :DEPLOY %1
 
