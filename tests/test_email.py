@@ -1,9 +1,10 @@
 import re
+
 import pytest
 
-from Dmail import Email
 from configDmanager import import_config
 
+from Dmail import Email
 from tests.mock_helper import String
 
 
@@ -85,3 +86,9 @@ def test_email_send_url_image(dmail, config, mocker, url):
     mocked_add_msg = mocker.spy(dmail, '_add_message')
     dmail.send_message(f'![Dmail Gif]({url})', config.receiver, 'Image')
     mocked_add_msg.assert_called_with(String(f'.*<img alt="Dmail Gif" src="{re.escape(url)}" />.*'), 'html')
+
+
+def test_email_send_from_file(dmail, config, mocker):
+    mocked_add_msg = mocker.spy(dmail, '_add_message')
+    dmail.send_message_from_file('my_message.md', config.receiver, 'File')
+    mocked_add_msg.assert_called_with('<h1>Title</h1>\n<p>content</p>', 'html')

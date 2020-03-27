@@ -87,3 +87,10 @@ class EmailBase:
         if attachments:
             self.add_attachments(attachments)
         self.server.sendmail(self.sender_email, receiver_email, self.message.as_string())
+
+    def send_message_from_file(self, message_file, receiver_email, subject=None, cc=None,
+                               bcc=None, subtype='plain', attachments=None):
+        with open(message_file, 'r') as f:
+            message = f.read()
+        self.send_message(message, receiver_email, subject=subject, cc=cc, bcc=bcc,
+                          subtype=subtype, attachments=attachments)

@@ -1,4 +1,3 @@
-import os
 import re
 
 import markdown
@@ -45,3 +44,8 @@ class Email(EmailBase):
     def send_message(self, message, receiver_email, subject=None, cc=None, bcc=None, subtype='md', attachments=None):
         super(Email, self).send_message(message=message, receiver_email=receiver_email, subject=subject, cc=cc, bcc=bcc,
                                         subtype=subtype, attachments=attachments)
+
+    def send_message_from_file(self, message_file, receiver_email, subject=None, cc=None,
+                               bcc=None, subtype='md', attachments=None):
+        super(Email, self).send_message_from_file(message_file, receiver_email, subject=subject, cc=cc, bcc=bcc,
+                                                  subtype=subtype, attachments=attachments)
