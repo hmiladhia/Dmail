@@ -1,7 +1,6 @@
 @ECHO off
 
-CALL :TESTS
-IF "%errorlevel%"=="0" CALL :DEPLOY %1
+CALL :TESTS && CALL :DEPLOY %1
 
 PAUSE > nul
 GOTO :EOF
