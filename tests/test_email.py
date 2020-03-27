@@ -66,6 +66,20 @@ def test_email_send_footnote(dmail, config, mocker):
 def test_email_send_image(dmail, config, mocker):
     mocked_add_msg = mocker.spy(dmail, '_add_message')
     message = '![test image](another_image.jpg)'
-    dmail.send_message(message, config.receiver, 'Footnote')
+    dmail.send_message(message, config.receiver, 'Image')
     uuid_regex = r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
     mocked_add_msg.assert_called_with(String(f'.*<img alt="test image" src="cid:{uuid_regex}" />.*'), 'html')
+
+
+def test_email_send_missing_image_error(dmail, config, mocker):
+    message = '![Dmail gif](missing.jpg)'
+    with pytest.raises(FileNotFoundError):
+        dmail.send_message(message, config.receiver, 'Footnote')
+
+
+def test_email_send_url_image(dmail, config, mocker):
+    mocked_add_msg = mocker.spy(dmail, '_add_message')
+    message = '![Dmail gif](https://media.giphy.com/media/jGJWV3AnjiC4M/giphy.gif)'
+    dmail.send_message(message, config.receiver, 'Image')
+    expected_regex = r'.*<img alt="test image" src="https://media.giphy.com/media/jGJWV3AnjiC4M/giphy.gif" />.*'
+    mocked_add_msg.assert_called_with(String(expected_regex), 'html')
