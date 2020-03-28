@@ -28,4 +28,4 @@ this is some other text
 """
 
 with Gmail(sender_email, password) as gmail:
-    gmail.send_message(message, receiver_email, subject="[Dmail] Markdown Demo", attachments=r"tests\test_image.jpg")
+    gmail.send(message, receiver_email, subject="[Dmail] Markdown Demo", attachments=r"tests\test_image.jpg")
