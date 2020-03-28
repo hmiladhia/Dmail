@@ -23,9 +23,9 @@ class Email(EmailBase):
                             r"(:\d+)?((/([~\w#+%@./_-]+))?(\?[\w+%@&\[\];=_-]+)?)?)")
 
     def __init__(self, mail_server, mail_port, sender_email=None, sender_password=None,
-                 mail_use_tls=True, md_extensions=None):
+                 mail_use_tls=True, mail_use_ssl=False, md_extensions=None):
         super().__init__(mail_server=mail_server, mail_port=mail_port, sender_email=sender_email,
-                         sender_password=sender_password, mail_use_tls=mail_use_tls)
+                         sender_password=sender_password, mail_use_tls=mail_use_tls, mail_use_ssl=mail_use_ssl)
         self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes'])
 
     def _process_message(self, message, subtype):
