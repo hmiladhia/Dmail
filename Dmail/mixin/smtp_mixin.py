@@ -34,8 +34,8 @@ class SmtpMixin(EmailBase):
         self.server.quit()
         super(SmtpMixin, self).quit()
 
-    def _send_email(self, email_recipients, email_body):
-        self.server.sendmail(self.sender_email, email_recipients, email_body)
+    def sendmail(self, recipients, message):
+        self.server.sendmail(self.sender_email, recipients, message)
 
     @staticmethod
     def get_server(mail_server, mail_port, mail_use_tls, mail_use_ssl):

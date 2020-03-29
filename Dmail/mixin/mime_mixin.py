@@ -15,19 +15,6 @@ class MimeMixin(MimeBaseMixin):
     def new_message(self):
         self.message = MIMEMultipart()
 
-    def quit(self):
-        self.message = None
-        super(MimeMixin, self).quit()
-
-    def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
-        self.__add_header("From", self.sender_email)
-        self.__add_header('Subject', subject)
-        self.__add_header('cc', ','.join(self._recipient_to_list(cc)))
-        self.__add_header("To", ','.join(self._recipient_to_list(to)))
-
-    def _get_converted_email_content(self):
-        return self.message.as_string()
-
     def _add_text(self, text, subtype):
         self.message.attach(MIMEText(text, subtype))
 
@@ -64,9 +51,18 @@ class MimeMixin(MimeBaseMixin):
         self.message.attach(img)
         return img_uuid
 
+    def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
+        self.__add_header("From", self.sender_email)
+        self.__add_header('Subject', subject)
+        self.__add_header('cc', ','.join(self._recipient_to_list(cc)))
+        self.__add_header("To", ','.join(self._recipient_to_list(to)))
+
     def __add_header(self, key, value):
         if value:
             try:
                 self.message.replace_header(key, value)
             except KeyError:
                 self.message.add_header(key, value)
+
+    def _get_converted_message(self):
+        return self.message.as_string()

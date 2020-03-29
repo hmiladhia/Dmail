@@ -43,23 +43,26 @@ class MimeBaseMixin(EmailBase):
         super(MimeBaseMixin, self).start()
 
     def quit(self):
+        self.message = None
         self.sess_uuid = None
         super(MimeBaseMixin, self).quit()
 
-    # functionality
-    def _get_email_content(self, email_text, to=None, subject=None, cc=None, bcc=None,
-                           subtype=None, attachments=None):
+    def get_message(self, email_text=None, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         self._set_header(to=to, subject=subject, cc=cc, bcc=bcc)
-        attachments and self.add_attachments(attachments)
-        self.add_text(email_text, subtype=subtype)
-        return self._get_converted_email_content()
+        self._add_message_content(email_text, subtype, attachments)
+        return self._get_converted_message()
 
-    def _post_send(self):
+    # functionality
+    def _add_message_content(self, email_text=None, subtype=None, attachments=None):
+        attachments and self.add_attachments(attachments)
+        email_text and self.add_text(email_text, subtype=subtype)
+
+    def _get_converted_message(self):
+        return self.message
+
+    def _post_send(self, email_text, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         if self.recreate_message_after_send:
             self.new_message()
-
-    def _get_converted_email_content(self):
-        return self.message
 
     def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
         pass
