@@ -2,7 +2,8 @@ import os
 from Dmail.esp import Gmail
 
 # email info
-receiver_email = "xxx@gmail.com"
+recipient_email = "xxx@gmail.com"
+cc_email = "yyy@hotmail.fr"
 sender_email = os.environ.get('email')
 password = os.environ.get('password')
 
@@ -28,4 +29,5 @@ this is some other text
 """
 
 with Gmail(sender_email, password) as gmail:
-    gmail.send(message, receiver_email, subject="[Dmail] Markdown Demo", attachments=r"tests\test_image.jpg")
+    gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", cc=cc_email,
+               attachments=r"tests\test_image.jpg")
