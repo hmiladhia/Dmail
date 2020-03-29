@@ -21,15 +21,13 @@ class SmtpMixin(EmailBase):
         self.sender_credentials = sender_credentials
         super(SmtpMixin, self).__init__(*args, sender_email=sender_email, **kwargs)
 
-    def start(self, sender_email=None, sender_password=None):
+    def start(self):
         # server
         self.server = self.get_server(self.mail_server, self.mail_port, self.mail_use_tls, self.mail_use_ssl)
 
         # login
-        sender_email = sender_email or self.sender_email
-        sender_password = sender_password or self.sender_credentials
-        if sender_password:
-            self.server.login(sender_email, sender_password)
+        if self.sender_credentials:
+            self.server.login(self.sender_email, self.sender_credentials)
         super(SmtpMixin, self).start()
 
     def quit(self):

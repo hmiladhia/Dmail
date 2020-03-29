@@ -1,7 +1,7 @@
 import os
 import uuid
 
-from mixin.email_base import EmailBase
+from Dmail.mixin.email_base import EmailBase
 
 
 class MimeBaseMixin(EmailBase):
