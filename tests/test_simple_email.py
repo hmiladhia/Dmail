@@ -1,7 +1,7 @@
 import re
 import pytest
 
-from Dmail.email_base import EmailBase
+from simple_email import SimpleEmail
 from configDmanager import import_config
 
 from tests.mock_helper import String
@@ -14,18 +14,19 @@ def config():
 
 @pytest.fixture(scope='session', autouse=True)
 def dmail(config):
-    with EmailBase(**config.email) as email:
+    with SimpleEmail(**config.email) as email:
         yield email
 
 
 def test_email_base_send_text(dmail, config, mocker):
     mocked_email = mocker.patch.object(dmail.server, 'sendmail')
     message, subject = 'abc', 'subject'
-    dmail.send_message(message, config.receiver, subject)
+    dmail.send(message, config.receiver, subject)
     expected_msg_regex = (r'Content-Type: multipart/mixed; boundary="===============\d+=="''\n'
                           r'MIME-Version: 1\.0' '\n'
                           f'From: {config.email.sender_email}' '\n'
-                          f'Subject: {subject}' '\n' '\n'
+                          f'Subject: {subject}' '\n'
+                          f'To: {config.receiver}' '\n' '\n'
                           r'--===============\d+==' '\n'
                           'Content-Type: text/plain; charset="us-ascii"' '\n'
                           r'MIME-Version: 1\.0' '\n'
@@ -39,12 +40,14 @@ def test_email_base_send_html(dmail, config, mocker):
     mocked_email = mocker.patch.object(dmail.server, 'sendmail')
     message, subject = 'abc', 'subject'
     html_msg = f'<strong>{message}</strong>'
-    dmail.send_message(html_msg, config.receiver, subject, subtype='html')
+    dmail.send(html_msg, config.receiver, subject, subtype='html')
     expected_msg_regex = (r'Content-Type: multipart/mixed; boundary="===============\d+=="''\n'
                           r'MIME-Version: 1\.0' '\n'
                           f'From: {config.email.sender_email}' '\n'
+                          f'Subject: {subject}' '\n' 
+                          f'To: {config.receiver}' '\n'
                           f'Subject: {subject}' '\n'
-                          f'Subject: {subject}' '\n' '\n'
+                          f'To: {config.receiver}' '\n' '\n'
                           r'--===============\d+==' '\n'
                           'Content-Type: text/plain; charset="us-ascii"' '\n'
                           r'MIME-Version: 1\.0' '\n'

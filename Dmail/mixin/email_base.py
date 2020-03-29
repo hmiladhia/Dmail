@@ -20,7 +20,8 @@ class EmailBase(ABC):
     def send(self, email_text, email_recipient, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         email_body = self._get_email_content(email_text, email_recipient, subject=subject, cc=cc, bcc=bcc,
                                              subtype=subtype or self.default_subtype, attachments=attachments)
-        self._send_email(email_recipient, email_body)
+        email_recipients = self._get_email_recipients(email_recipient, cc=None, bcc=None)
+        self._send_email(email_recipients, email_body)
 
     def send_from_file(self, txt_file, email_recipient, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         message = Path(txt_file).read_text()
@@ -38,9 +39,6 @@ class EmailBase(ABC):
         {email_text}"""
         return email_body
 
-    def _process_text(self, email_text, subtype):
-        return email_text, subtype
-
     # context manager
     def __enter__(self):
         self.start()
@@ -48,6 +46,20 @@ class EmailBase(ABC):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.quit()
+
+    # utils
+    @classmethod
+    def _get_email_recipients(cls, email_recipient, cc=None, bcc=None):
+        return cls._recipient_to_list(email_recipient) + cls._recipient_to_list(cc) + cls._recipient_to_list(bcc)
+
+    @staticmethod
+    def _recipient_to_list(recipient):
+        if isinstance(recipient, str):
+            return [recipient]
+        elif recipient is None:
+            return []
+        else:
+            return recipient
 
     # depreciated
     def send_message(self, message, receiver_email, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
