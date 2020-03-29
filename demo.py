@@ -30,4 +30,4 @@ this is some other text
 
 with Gmail(sender_email, password) as gmail:
     gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", cc=cc_email,
-               attachments=r"tests\test_image.jpg")
+               attachments=[r"tests\test_image.jpg", r'tests\pdf.pdf', r'tests\text.txt'])

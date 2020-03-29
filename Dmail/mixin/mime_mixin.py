@@ -1,10 +1,12 @@
+import mimetypes
 import os
 
 from email import encoders
-from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from email.mime.audio import MIMEAudio
+from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
+from email.mime.text import MIMEText
 
 from Dmail.mixin.mime_base_mixin import MimeBaseMixin
 
@@ -35,19 +37,28 @@ class MimeMixin(MimeBaseMixin):
         self.email_content.attach(MIMEText(text, subtype))
 
     def add_attachment(self, file_path, filename=None):
-        with open(file_path, "rb") as attachment:
-            # Add file as application/octet-stream
-            part = MIMEBase("application", "octet-stream")
-            part.set_payload(attachment.read())
+        content_type, encoding = mimetypes.guess_type(file_path)
 
-        # Encode file in ASCII characters to send by email
-        encoders.encode_base64(part)
+        if content_type is None or encoding is not None:
+            content_type = 'application/octet-stream'
+        main_type, sub_type = content_type.split('/', 1)
 
-        # Add header as key/value pair to attachment part
-        part.add_header(
-            "Content-Disposition",
-            f"attachment; filename= {filename or os.path.basename(file_path)}",
-        )
+        with open(file_path, 'r' if main_type == 'text' else 'rb') as fp:
+            content = fp.read()
+
+        if main_type == 'text':
+            part = MIMEText(content, _subtype=sub_type)
+        elif main_type == 'image':
+            part = MIMEImage(content, _subtype=sub_type)
+        elif main_type == 'audio':
+            part = MIMEAudio(content, _subtype=sub_type)
+        else:
+            part = MIMEBase(main_type, sub_type)
+            part.set_payload(content)
+            encoders.encode_base64(part)
+
+        part.add_header('Content-Disposition', 'attachment', filename=filename or os.path.basename(file_path))
+
         self.email_content.attach(part)
 
     def add_image(self, img_path):
