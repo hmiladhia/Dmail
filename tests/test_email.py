@@ -66,7 +66,7 @@ def test_email_send_footnote(dmail, config, mocker):
 
 def test_email_send_image(dmail, config, mocker):
     mocked_add_msg = mocker.spy(dmail, '_add_text')
-    message = '![test image](another_image.jpg)'
+    message = r'![test image](files\another_image.jpg)'
     dmail.send(message, config.receiver, 'Image')
     uuid_regex = r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
     mocked_add_msg.assert_called_with(String(f'.*<img alt="test image" src="cid:{uuid_regex}" />.*'), 'html')
@@ -90,5 +90,5 @@ def test_email_send_url_image(dmail, config, mocker, url):
 
 def test_email_send_from_file(dmail, config, mocker):
     mocked_add_msg = mocker.spy(dmail, '_add_text')
-    dmail.send_from_file('my_message.md', config.receiver, 'File')
+    dmail.send_from_file(r'files\my_message.md', config.receiver, 'File')
     mocked_add_msg.assert_called_with('<h1>Title</h1>\n<p>content</p>', 'html')

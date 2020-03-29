@@ -42,7 +42,7 @@ this is some other text
 """
 
 with Gmail(sender_email, password) as gmail:
-    gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", attachments=r"tests\test_image.jpg")
+    gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", attachments=r"tests\files\test_image.jpg")
 ```
 
 You can also send text or html content by specifying the subtype :
@@ -53,6 +53,6 @@ from Dmail.esp import Hotmail
 message = "Simple e-mail"
 
 with Hotmail(sender_email, password) as hotmail:
-    hotmail.add_attachments(r"tests\test_image.jpg", "another_name.jpg")
+    hotmail.add_attachments(r"tests\files\test_image.jpg", "another_name.jpg")
     hotmail.send(message, recipient_email, "[Dmail] Text demo", subtype='text')
 ```
