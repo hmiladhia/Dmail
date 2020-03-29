@@ -6,8 +6,9 @@ from Dmail.mixin.email_base import EmailBase
 
 class MimeBaseMixin(EmailBase):
     def __init__(self, sender_email, *args, **kwargs):
-        self.email_content = None
+        self.message = None
         self.sess_uuid = None
+        self.recreate_message_after_send = True
         super(MimeBaseMixin, self).__init__(*args, sender_email=sender_email, **kwargs)
 
     # interface
@@ -33,7 +34,11 @@ class MimeBaseMixin(EmailBase):
     def add_image(self, img_path):
         return self.__get_uuid(img_path)
 
+    def new_message(self):
+        pass
+
     def start(self):
+        self.new_message()
         self.sess_uuid = uuid.uuid1()
         super(MimeBaseMixin, self).start()
 
@@ -49,8 +54,12 @@ class MimeBaseMixin(EmailBase):
         self.add_text(email_text, subtype=subtype)
         return self._get_converted_email_content()
 
+    def _post_send(self):
+        if self.recreate_message_after_send:
+            self.new_message()
+
     def _get_converted_email_content(self):
-        return self.email_content
+        return self.message
 
     def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
         pass

@@ -22,12 +22,16 @@ class EmailBase(ABC):
                                              bcc=bcc, subtype=subtype or self.default_subtype, attachments=attachments)
         email_recipients = self._get_email_recipients(to, cc=cc, bcc=bcc)
         self._send_email(email_recipients, email_body)
+        self._post_send()
 
     def send_from_file(self, txt_file, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         message = Path(txt_file).read_text()
         self.send(message, to=to, subject=subject, cc=cc, bcc=bcc, subtype=subtype, attachments=attachments)
 
     # functionality
+    def _post_send(self):
+        pass
+
     def _send_email(self, email_recipients, email_body):
         pass
 

@@ -12,29 +12,24 @@ from Dmail.mixin.mime_base_mixin import MimeBaseMixin
 
 
 class MimeMixin(MimeBaseMixin):
-    def start(self):
-        self.email_content = MIMEMultipart()
-        super(MimeMixin, self).start()
+    def new_message(self):
+        self.message = MIMEMultipart()
 
     def quit(self):
-        self.email_content = None
+        self.message = None
         super(MimeMixin, self).quit()
 
-    # functionality
     def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
-        self.email_content["From"] = self.sender_email
-        if subject:
-            self.email_content["Subject"] = subject
-        if cc:
-            self.email_content['cc'] = ','.join(self._recipient_to_list(cc))
-        if to:
-            self.email_content["To"] = ','.join(self._recipient_to_list(to))
+        self.__add_header("From", self.sender_email)
+        self.__add_header('Subject', subject)
+        self.__add_header('cc', ','.join(self._recipient_to_list(cc)))
+        self.__add_header("To", ','.join(self._recipient_to_list(to)))
 
     def _get_converted_email_content(self):
-        return self.email_content.as_string()
+        return self.message.as_string()
 
     def _add_text(self, text, subtype):
-        self.email_content.attach(MIMEText(text, subtype))
+        self.message.attach(MIMEText(text, subtype))
 
     def add_attachment(self, file_path, filename=None):
         content_type, encoding = mimetypes.guess_type(file_path)
@@ -59,12 +54,19 @@ class MimeMixin(MimeBaseMixin):
 
         part.add_header('Content-Disposition', 'attachment', filename=filename or os.path.basename(file_path))
 
-        self.email_content.attach(part)
+        self.message.attach(part)
 
     def add_image(self, img_path):
         with open(img_path, 'rb') as fp:
             img = MIMEImage(fp.read())
         img_uuid = super(MimeMixin, self).add_image(img_path)
         img.add_header('Content-ID', f"<{img_uuid}>")
-        self.email_content.attach(img)
+        self.message.attach(img)
         return img_uuid
+
+    def __add_header(self, key, value):
+        if value:
+            try:
+                self.message.replace_header(key, value)
+            except KeyError:
+                self.message.add_header(key, value)
