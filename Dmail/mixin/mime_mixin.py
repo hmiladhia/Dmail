@@ -6,10 +6,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
-from Dmail.mixin.content_based_mixin import ContentBasedMixin
+from Dmail.mixin.mime_base_mixin import MimeBaseMixin
 
 
-class MimeMixin(ContentBasedMixin):
+class MimeMixin(MimeBaseMixin):
     def start(self):
         self.email_content = MIMEMultipart()
         super(MimeMixin, self).start()
@@ -31,7 +31,7 @@ class MimeMixin(ContentBasedMixin):
     def _get_converted_email_content(self):
         return self.email_content.as_string()
 
-    def add_text(self, text, subtype):
+    def _add_text(self, text, subtype):
         self.email_content.attach(MIMEText(text, subtype))
 
     def add_attachment(self, file_path, filename=None):

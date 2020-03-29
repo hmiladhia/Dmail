@@ -2,10 +2,11 @@ import re
 
 import markdown
 
-from Dmail.email_base import EmailBase
+from Dmail.simple_email import SimpleEmail
 
 
-class Email(EmailBase):
+class Email(SimpleEmail):
+    default_subtype = 'md'
     _img_regex = re.compile(r'(!\[.*?\]\()(.*?)(\))')
     _tld_regex = (r"(aero|asia|biz|cat|com|coop|edu|gov|info|int"
                   r"|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as"
@@ -22,30 +23,23 @@ class Email(EmailBase):
                             f"{_tld_regex}"
                             r"(:\d+)?((/([~\w#+%@./_-]+))?(\?[\w+%@&\[\];=_-]+)?)?)")
 
-    def __init__(self, mail_server, mail_port, sender_email=None, sender_password=None,
+    def __init__(self, mail_server, mail_port, sender_email=None, sender_credentials=None,
                  mail_use_tls=True, mail_use_ssl=False, md_extensions=None):
-        super().__init__(mail_server=mail_server, mail_port=mail_port, sender_email=sender_email,
-                         sender_password=sender_password, mail_use_tls=mail_use_tls, mail_use_ssl=mail_use_ssl)
+        super(Email, self).__init__(mail_server=mail_server, mail_port=mail_port, sender_email=sender_email,
+                                    sender_credentials=sender_credentials, mail_use_tls=mail_use_tls,
+                                    mail_use_ssl=mail_use_ssl)
         self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes'])
 
-    def _process_message(self, message, subtype):
+    def _process_text(self, text, subtype):
         if subtype == 'md':
             subtype = 'html'
-            message = self._img_regex.sub(self.__md_add_img, message)
-            message = self._markdown.convert(message)
-        return super(Email, self)._process_message(message, subtype)
+            text = self._img_regex.sub(self._md_add_img, text)
+            text = self._markdown.convert(text)
+        return super(Email, self)._process_text(text, subtype)
 
-    def __md_add_img(self, match):
+    # private
+    def _md_add_img(self, match):
         file = match.group(2)
         if self._url_regex.fullmatch(file):
             return f"{match.group(1)}{file}{match.group(3)}"
         return f"{match.group(1)}cid:{self.add_image(file)}{match.group(3)}"
-
-    def send_message(self, message, receiver_email, subject=None, cc=None, bcc=None, subtype='md', attachments=None):
-        super(Email, self).send_message(message=message, receiver_email=receiver_email, subject=subject, cc=cc, bcc=bcc,
-                                        subtype=subtype, attachments=attachments)
-
-    def send_message_from_file(self, message_file, receiver_email, subject=None, cc=None,
-                               bcc=None, subtype='md', attachments=None):
-        super(Email, self).send_message_from_file(message_file, receiver_email, subject=subject, cc=cc, bcc=bcc,
-                                                  subtype=subtype, attachments=attachments)

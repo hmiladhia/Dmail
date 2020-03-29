@@ -4,11 +4,11 @@ import uuid
 from mixin.email_base import EmailBase
 
 
-class ContentBasedMixin(EmailBase):
+class MimeBaseMixin(EmailBase):
     def __init__(self, sender_email, *args, **kwargs):
         self.email_content = None
         self.sess_uuid = None
-        super(ContentBasedMixin, self).__init__(*args, sender_email=sender_email, **kwargs)
+        super(MimeBaseMixin, self).__init__(*args, sender_email=sender_email, **kwargs)
 
     # interface
     def add_attachments(self, attachments, *args, **kwargs):
@@ -24,7 +24,8 @@ class ContentBasedMixin(EmailBase):
             raise TypeError('attachments should either be of type str, dict or list')
 
     def add_text(self, text, subtype):
-        pass
+        text, subtype = self._process_text(text, subtype)
+        self._add_text(text, subtype)
 
     def add_attachment(self, file_path, filename=None):
         pass
@@ -34,11 +35,11 @@ class ContentBasedMixin(EmailBase):
 
     def start(self):
         self.sess_uuid = uuid.uuid1()
-        super(ContentBasedMixin, self).start()
+        super(MimeBaseMixin, self).start()
 
     def quit(self):
         self.sess_uuid = None
-        super(ContentBasedMixin, self).quit()
+        super(MimeBaseMixin, self).quit()
 
     # functionality
     def _get_email_content(self, email_text, email_recipient, subject=None, cc=None, bcc=None,
@@ -52,6 +53,12 @@ class ContentBasedMixin(EmailBase):
         return self.email_content
 
     def _set_header(self, email_recipient=None, subject=None, cc=None, bcc=None, **kwargs):
+        pass
+
+    def _process_text(self, text, subtype):
+        return text, subtype
+
+    def _add_text(self, text, subtype):
         pass
 
     # private
