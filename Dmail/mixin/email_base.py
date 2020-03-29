@@ -17,10 +17,10 @@ class EmailBase(ABC):
     def quit(self):
         pass
 
-    def send(self, email_text, email_recipient, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
-        email_body = self._get_email_content(email_text, email_recipient, subject=subject, cc=cc, bcc=bcc,
-                                             subtype=subtype or self.default_subtype, attachments=attachments)
-        email_recipients = self._get_email_recipients(email_recipient, cc=None, bcc=None)
+    def send(self, email_text, email_recipient=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
+        email_body = self._get_email_content(email_text, email_recipient=email_recipient, subject=subject, cc=cc,
+                                             bcc=bcc, subtype=subtype or self.default_subtype, attachments=attachments)
+        email_recipients = self._get_email_recipients(email_recipient, cc=cc, bcc=bcc)
         self._send_email(email_recipients, email_body)
 
     def send_from_file(self, txt_file, email_recipient, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
@@ -28,10 +28,11 @@ class EmailBase(ABC):
         self.send(message, email_recipient, subject=subject, cc=cc, bcc=bcc, subtype=subtype, attachments=attachments)
 
     # functionality
-    def _send_email(self, email_recipient, email_body):
+    def _send_email(self, email_recipients, email_body):
         pass
 
-    def _get_email_content(self, email_text, email_recipient, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
+    def _get_email_content(self, email_text, email_recipient=None, subject=None, cc=None, bcc=None, subtype=None,
+                           attachments=None):
         email_body = f"""\
         Subject: Hi Mailtrap
         To: {email_recipient}
