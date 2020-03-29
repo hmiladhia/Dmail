@@ -17,25 +17,25 @@ class EmailBase(ABC):
     def quit(self):
         pass
 
-    def send(self, email_text, email_recipient=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
-        email_body = self._get_email_content(email_text, email_recipient=email_recipient, subject=subject, cc=cc,
+    def send(self, email_text, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
+        email_body = self._get_email_content(email_text, to=to, subject=subject, cc=cc,
                                              bcc=bcc, subtype=subtype or self.default_subtype, attachments=attachments)
-        email_recipients = self._get_email_recipients(email_recipient, cc=cc, bcc=bcc)
+        email_recipients = self._get_email_recipients(to, cc=cc, bcc=bcc)
         self._send_email(email_recipients, email_body)
 
-    def send_from_file(self, txt_file, email_recipient, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
+    def send_from_file(self, txt_file, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         message = Path(txt_file).read_text()
-        self.send(message, email_recipient, subject=subject, cc=cc, bcc=bcc, subtype=subtype, attachments=attachments)
+        self.send(message, to=to, subject=subject, cc=cc, bcc=bcc, subtype=subtype, attachments=attachments)
 
     # functionality
     def _send_email(self, email_recipients, email_body):
         pass
 
-    def _get_email_content(self, email_text, email_recipient=None, subject=None, cc=None, bcc=None, subtype=None,
+    def _get_email_content(self, email_text, to=None, subject=None, cc=None, bcc=None, subtype=None,
                            attachments=None):
         email_body = f"""\
         Subject: Hi Mailtrap
-        To: {email_recipient}
+        To: {to}
         From: {self.sender_email}
         {email_text}"""
         return email_body
@@ -50,8 +50,8 @@ class EmailBase(ABC):
 
     # utils
     @classmethod
-    def _get_email_recipients(cls, email_recipient, cc=None, bcc=None):
-        return cls._recipient_to_list(email_recipient) + cls._recipient_to_list(cc) + cls._recipient_to_list(bcc)
+    def _get_email_recipients(cls, to, cc=None, bcc=None):
+        return cls._recipient_to_list(to) + cls._recipient_to_list(cc) + cls._recipient_to_list(bcc)
 
     @staticmethod
     def _recipient_to_list(recipient):

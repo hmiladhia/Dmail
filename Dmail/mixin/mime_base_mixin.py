@@ -42,9 +42,9 @@ class MimeBaseMixin(EmailBase):
         super(MimeBaseMixin, self).quit()
 
     # functionality
-    def _get_email_content(self, email_text, email_recipient, subject=None, cc=None, bcc=None,
+    def _get_email_content(self, email_text, to=None, subject=None, cc=None, bcc=None,
                            subtype=None, attachments=None):
-        self._set_header(email_recipient=email_recipient, subject=subject, cc=cc, bcc=bcc)
+        self._set_header(to=to, subject=subject, cc=cc, bcc=bcc)
         attachments and self.add_attachments(attachments)
         self.add_text(email_text, subtype=subtype)
         return self._get_converted_email_content()
@@ -52,7 +52,7 @@ class MimeBaseMixin(EmailBase):
     def _get_converted_email_content(self):
         return self.email_content
 
-    def _set_header(self, email_recipient=None, subject=None, cc=None, bcc=None, **kwargs):
+    def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
         pass
 
     def _process_text(self, text, subtype):

@@ -21,14 +21,14 @@ class MimeMixin(MimeBaseMixin):
         super(MimeMixin, self).quit()
 
     # functionality
-    def _set_header(self, email_recipient=None, subject=None, cc=None, bcc=None, **kwargs):
+    def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
         self.email_content["From"] = self.sender_email
         if subject:
             self.email_content["Subject"] = subject
         if cc:
             self.email_content['cc'] = ','.join(self._recipient_to_list(cc))
-        if email_recipient:
-            self.email_content["To"] = ','.join(self._recipient_to_list(email_recipient))
+        if to:
+            self.email_content["To"] = ','.join(self._recipient_to_list(to))
 
     def _get_converted_email_content(self):
         return self.email_content.as_string()
