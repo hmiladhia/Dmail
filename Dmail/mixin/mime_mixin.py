@@ -1,11 +1,10 @@
 import mimetypes
 import os
 
-from email import encoders
-from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from email.mime.audio import MIMEAudio
-from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from Dmail.mixin.mime_base_mixin import MimeBaseMixin
@@ -35,12 +34,9 @@ class MimeMixin(MimeBaseMixin):
         elif main_type == 'audio':
             part = MIMEAudio(content, _subtype=sub_type)
         else:
-            part = MIMEBase(main_type, sub_type)
-            part.set_payload(content)
-            encoders.encode_base64(part)
+            part = MIMEApplication(content)
 
         part.add_header('Content-Disposition', 'attachment', filename=filename or os.path.basename(file_path))
-
         self.message.attach(part)
 
     def add_image(self, img_path):
