@@ -10,15 +10,18 @@ from Dmail.mixin import EmailBase
 
 
 class GmailApiBase(EmailBase):
-    def __init__(self, sender_email, token_file, credentials_file=None, scopes='compose', *args, **kwargs):
+    default_scope = 'send'
+
+    def __init__(self, sender_email, token_file, credentials_file=None, scopes='send', *args, **kwargs):
         super(GmailApiBase, self).__init__(*args, sender_email=sender_email, **kwargs)
         self.service = None
         self.creds = None
 
         self.set_creds(token_file, credentials_file, scopes)
 
-    def set_creds(self, token_file, credentials_file=None, scopes='compose'):
-        scopes = self.format_scopes(scopes)
+    def set_creds(self, token_file, credentials_file=None, scopes=None):
+        self.creds = None
+        scopes = self.format_scopes(scopes or self.default_scope)
         # The file token.pickle stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
@@ -26,7 +29,7 @@ class GmailApiBase(EmailBase):
             with open(token_file, 'rb') as token:
                 self.creds = pickle.load(token)
         # If there are no (valid) credentials available, let the user log in.
-        if not self.creds or not self.creds.valid:
+        if not self.creds or not self.creds.valid or set(self.creds.scopes) != set(scopes):
             if self.creds and self.creds.expired and self.creds.refresh_token:
                 self.creds.refresh(Request())
             else:
@@ -47,14 +50,10 @@ class GmailApiBase(EmailBase):
         super(GmailApiBase, self).quit()
 
     def sendmail(self, recipients, message):
-        try:
-            body = self.get_request_body(message)
-            message = (self.service.users().messages().send(userId=self.sender_email, body=body)
-                       .execute())
-            # print('Message Id: %s' % message['id'])
-            return message
-        except Exception as error:
-            print('An error occurred: %s' % error)
+        body = self.get_request_body(message)
+        message = (self.service.users().messages().send(userId=self.sender_email, body=body)
+                   .execute())
+        return message
 
     @staticmethod
     def get_request_body(message):

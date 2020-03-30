@@ -4,10 +4,11 @@ from Dmail.api._gmail_api_base import GmailApiBase
 
 class GmailApi(GmailApiBase, MarkdownMixin, MimeMixin):
     default_subtype = 'md'
+    default_scope = 'compose'
 
-    def __init__(self, sender_email, token_file, credentials_file=None, md_extensions=None):
+    def __init__(self, sender_email, token_file, credentials_file=None, scopes='compose', md_extensions=None):
         super(GmailApi, self).__init__(sender_email=sender_email, token_file=token_file,
-                                       credentials_file=credentials_file, md_extensions=md_extensions)
+                                       credentials_file=credentials_file, scopes=scopes, md_extensions=md_extensions)
 
     def create_draft(self, email_text, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         subtype = subtype or self.default_subtype
@@ -26,9 +27,5 @@ class GmailApi(GmailApiBase, MarkdownMixin, MimeMixin):
         Returns:
           Draft object, including draft id and message meta data.
         """
-        try:
-            body = {'message': self.get_request_body(message)}
-            return self.service.users().drafts().create(userId=self.sender_email, body=body).execute()
-        except Exception as error:
-            print('An error occurred: %s' % error)
-            return None
+        body = {'message': self.get_request_body(message)}
+        return self.service.users().drafts().create(userId=self.sender_email, body=body).execute()
