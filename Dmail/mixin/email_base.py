@@ -76,7 +76,7 @@ class EmailBase(ABC):
         self.send(message, receiver_email, subject=subject, cc=cc, bcc=bcc, subtype=subtype, attachments=attachments)
 
     def send_message_from_file(self, message_file, receiver_email, subject=None, cc=None,
-                               bcc=None, subtype='plain', attachments=None):
+                               bcc=None, subtype=None, attachments=None):
         warnings.warn("send_message_from_file() is deprecated; use send_from_file().", PendingDeprecationWarning)
         self.send_from_file(message_file, receiver_email, subject=subject, cc=cc,
                             bcc=bcc, subtype=subtype, attachments=attachments)
