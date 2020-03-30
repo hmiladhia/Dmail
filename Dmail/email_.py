@@ -1,5 +1,5 @@
-from Dmail.simple_email import SimpleEmail
-from Dmail.mixin.markdown_mixin import MarkdownMixin
+from Dmail import SimpleEmail
+from Dmail.mixin import MarkdownMixin
 
 
 class Email(SimpleEmail, MarkdownMixin):

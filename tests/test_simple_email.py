@@ -1,7 +1,7 @@
 import re
 import pytest
 
-from simple_email import SimpleEmail
+from Dmail import SimpleEmail
 from configDmanager import import_config
 
 from tests.mock_helper import String
