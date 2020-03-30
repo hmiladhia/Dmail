@@ -3,8 +3,8 @@
   "__parent": "PackageConfig",
   "__type": "json",
   "__version": {
-    "__major": 0,
-    "__minor": 3,
+    "__major": 1,
+    "__minor": 0,
     "__patch": 0
   },
   "version": "${__version.__major}.${__version.__minor}.${__version.__patch}"

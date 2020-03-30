@@ -7,7 +7,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from Dmail.mixin.mime_base_mixin import MimeBaseMixin
+from Dmail.mixin import MimeBaseMixin
 
 
 class MimeMixin(MimeBaseMixin):

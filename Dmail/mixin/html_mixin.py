@@ -1,6 +1,6 @@
 import re
 
-from Dmail.mixin.mime_base_mixin import MimeBaseMixin
+from Dmail.mixin import MimeBaseMixin
 
 
 class HtmlMixin(MimeBaseMixin):

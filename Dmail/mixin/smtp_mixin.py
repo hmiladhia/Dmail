@@ -1,7 +1,7 @@
 import smtplib
 import ssl
 
-from Dmail.mixin.email_base import EmailBase
+from Dmail.mixin import EmailBase
 
 
 class SmtpMixin(EmailBase):

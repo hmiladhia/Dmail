@@ -2,7 +2,7 @@ import re
 
 import markdown
 
-from Dmail.mixin.html_mixin import HtmlMixin
+from Dmail.mixin import HtmlMixin
 
 
 class MarkdownMixin(HtmlMixin):
