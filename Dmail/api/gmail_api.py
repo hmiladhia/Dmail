@@ -6,7 +6,7 @@ class GmailApi(GmailApiBase, MarkdownMixin, MimeMixin):
     default_subtype = 'md'
     default_scope = 'compose'
 
-    def __init__(self, sender_email, token_file, credentials_file=None, scopes='compose', md_extensions=None):
+    def __init__(self, sender_email, token_file='token.pickle', credentials_file=None, scopes='compose', md_extensions=None):
         super(GmailApi, self).__init__(sender_email=sender_email, token_file=token_file,
                                        credentials_file=credentials_file, scopes=scopes, md_extensions=md_extensions)
 
