@@ -21,6 +21,7 @@ from Dmail.esp import Gmail
 
 # email info
 recipient_email = "xxx@gmail.com"
+cc_email = "yyy@hotmail.fr"
 sender_email = os.environ.get('email')
 password = os.environ.get('password')
 
@@ -29,7 +30,7 @@ message = """
 # Email Content
 This is a **test**
 
-![test image](tests/another_image.jpg)
+![test image](tests/files/another_image.jpg)
 
 | Collumn1 | Collumn2 | Collumn3 |
 | :------: | :------- | -------- |
@@ -42,10 +43,16 @@ this is some other text
 """
 
 with Gmail(sender_email, password) as gmail:
-    gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", attachments=r"tests\files\test_image.jpg")
+    gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", cc=cc_email,
+           attachments=[r"tests\files\test_image.jpg", r'tests\files\pdf.pdf', r'tests\files\text.txt'])
+```
+- You can send an e-mail loaded from a file:
+```python
+with Gmail(sender_email, password) as gmail:
+    gmail.send_from_file(r"tests\files\my_message.md", recipient_email, subject="[Dmail] Markdown File")
 ```
 
-You can also send text or html content by specifying the subtype :
+- You can also send text or html content by specifying the subtype :
 
 ```python
 from Dmail.esp import Hotmail
@@ -55,4 +62,12 @@ message = "Simple e-mail"
 with Hotmail(sender_email, password) as hotmail:
     hotmail.add_attachments(r"tests\files\test_image.jpg", "another_name.jpg")
     hotmail.send(message, recipient_email, "[Dmail] Text demo", subtype='text')
+```
+
+- You can use a custom smtp server and port:
+```python
+from Dmail import Email
+
+with Email(mail_server, mail_port, sender_email, password) as email:
+    email.send(message, recipient_email, "[Dmail] Text demo")
 ```

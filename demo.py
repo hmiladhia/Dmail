@@ -11,7 +11,7 @@ message = """
 # Email Content
 This is a **test**
 
-![test image](tests/another_image.jpg)
+![test image](tests/files/another_image.jpg)
 
 | Collumn1 | Collumn2 | Collumn3 |
 | :------: | :------- | -------- |
@@ -31,3 +31,4 @@ this is some other text
 with Gmail(sender_email, password) as gmail:
     gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", cc=cc_email,
                attachments=[r"tests\files\test_image.jpg", r'tests\files\pdf.pdf', r'tests\files\text.txt'])
+    gmail.send_from_file(r"tests\files\my_message.md", recipient_email, subject="[Dmail] Markdown File")
