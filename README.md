@@ -15,6 +15,9 @@ python -m pip install Dmail
 ```
 
 ## How to use:
+
+### Usage example:
+
 ```python
 import os
 from Dmail.esp import Gmail
@@ -52,7 +55,7 @@ with Gmail(sender_email, password) as gmail:
     gmail.send_from_file(r"tests\files\my_message.md", recipient_email, subject="[Dmail] Markdown File")
 ```
 
-- You can also send text or html content by specifying the subtype :
+- You can also send *text* or *html* content by specifying the **subtype** :
 
 ```python
 from Dmail.esp import Hotmail
@@ -63,6 +66,15 @@ with Hotmail(sender_email, password) as hotmail:
     hotmail.add_attachments(r"tests\files\test_image.jpg", "another_name.jpg")
     hotmail.send(message, recipient_email, "[Dmail] Text demo", subtype='text')
 ```
+
+- The usage of a custom **CSS stylesheet** is possible :
+
+  ```python
+  with Hotmail(sender_email, password, styles=r'path\to\style.css') as mail:
+      mail.send(message, recipient_email, subject="[Dmail] Markdown Style")
+  ```
+
+### Custom SMTP Server
 
 - You can use a custom smtp server and port:
 ```python
@@ -86,7 +98,7 @@ python -m pip install Dmail[GmailApi]
 
 ##### First use
 
-You can also use the **Gmail Api** through a token !
+You can also use the **Gmail API** through a token !
 You'll need to download *"credentials.json"* ( Step 1 of this guide : https://developers.google.com/gmail/api/quickstart/python#step_1_turn_on_the ) 
 
 ##### Send Email
