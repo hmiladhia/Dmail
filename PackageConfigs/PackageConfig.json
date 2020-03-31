@@ -8,6 +8,7 @@
   "long_description_content_type": "text/markdown",
   "url": "https://github.com/hmiladhia/Dmail",
   "packages": ["Dmail", "Dmail.esp", "Dmail.mixin"],
+  "keywords": "email mail markdown md html style css",
   "install_requires": ["markdown"],
   "extras_require": {
     "GmailApi":  ["google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib"]
