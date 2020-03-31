@@ -16,8 +16,6 @@ python -m pip install Dmail
 
 ## How to use:
 
-### Usage example:
-
 ```python
 import os
 from Dmail.esp import Gmail
@@ -47,12 +45,13 @@ this is some other text
 
 with Gmail(sender_email, password) as gmail:
     gmail.send(message, recipient_email, subject="[Dmail] Markdown Demo", cc=cc_email,
-           attachments=[r"tests\files\test_image.jpg", r'tests\files\pdf.pdf', r'tests\files\text.txt'])
+           attachments=[r"path\to\image.jpg", r'path\to\pdf.pdf', r'path\to\text.txt'])
 ```
 - You can send an e-mail loaded from a file:
 ```python
 with Gmail(sender_email, password) as gmail:
-    gmail.send_from_file(r"tests\files\my_message.md", recipient_email, subject="[Dmail] Markdown File")
+    gmail.send_from_file(r"path\to\my_message.md", recipient_email, 
+                         subject="[Dmail] Markdown File")
 ```
 
 - You can also send *text* or *html* content by specifying the **subtype** :
@@ -63,7 +62,7 @@ from Dmail.esp import Hotmail
 message = "Simple e-mail"
 
 with Hotmail(sender_email, password) as hotmail:
-    hotmail.add_attachments(r"tests\files\test_image.jpg", "another_name.jpg")
+    hotmail.add_attachments(r"path\to\image.jpg", "another_name.jpg")
     hotmail.send(message, recipient_email, "[Dmail] Text demo", subtype='text')
 ```
 
@@ -73,7 +72,6 @@ with Hotmail(sender_email, password) as hotmail:
   with Hotmail(sender_email, password, styles=r'path\to\style.css') as mail:
       mail.send(message, recipient_email, subject="[Dmail] Markdown Style")
   ```
-
 ### Custom SMTP Server
 
 - You can use a custom smtp server and port:
