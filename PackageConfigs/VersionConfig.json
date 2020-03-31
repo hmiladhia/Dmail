@@ -4,8 +4,8 @@
   "__type": "json",
   "__version": {
     "__major": 1,
-    "__minor": 1,
-    "__patch": 1
+    "__minor": 2,
+    "__patch": 0
   },
   "version": "${__version.__major}.${__version.__minor}.${__version.__patch}"
 }
