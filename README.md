@@ -76,6 +76,14 @@ with Email(mail_server, mail_port, sender_email, password) as email:
 
 #### Gmail Api
 
+##### Installation
+
+To use the Gmail Api you need to install extra packages :
+
+```bash
+python -m pip install Dmail[GmailApi]
+```
+
 ##### First use
 
 You can also use the **Gmail Api** through a token !
