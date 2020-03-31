@@ -7,7 +7,7 @@ from pathlib import Path
 class EmailBase(ABC):
     default_subtype = 'plain'
 
-    def __init__(self, sender_email, *args, **kwargs):
+    def __init__(self, sender_email):
         self.sender_email = sender_email
 
     # interface

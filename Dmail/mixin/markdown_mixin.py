@@ -6,8 +6,8 @@ from Dmail.mixin import HtmlMixin
 
 
 class MarkdownMixin(HtmlMixin):
-    def __init__(self, sender_email=None, md_extensions=None, styles=None, *args, **kwargs):
-        super(MarkdownMixin, self).__init__(*args, sender_email=sender_email, **kwargs)
+    def __init__(self, sender_email, md_extensions=None, styles=None, **kwargs):
+        super(MarkdownMixin, self).__init__(sender_email=sender_email, **kwargs)
         self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes'])
         self.styles = styles or []
 

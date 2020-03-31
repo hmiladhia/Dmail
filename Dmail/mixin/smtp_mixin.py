@@ -6,7 +6,7 @@ from Dmail.mixin import EmailBase
 
 class SmtpMixin(EmailBase):
     def __init__(self, mail_server, mail_port=None, sender_email=None, sender_credentials=None,
-                 mail_use_tls=True, mail_use_ssl=False, *args, **kwargs):
+                 mail_use_tls=True, mail_use_ssl=False, **kwargs):
         self._check_sanity(mail_server, mail_port, sender_email, sender_credentials, mail_use_tls, mail_use_ssl)
 
         # server info
@@ -19,7 +19,7 @@ class SmtpMixin(EmailBase):
         # login info
         self.sender_email = sender_email
         self.sender_credentials = sender_credentials
-        super(SmtpMixin, self).__init__(*args, sender_email=sender_email, **kwargs)
+        super(SmtpMixin, self).__init__(sender_email=sender_email, **kwargs)
 
     def start(self):
         # server

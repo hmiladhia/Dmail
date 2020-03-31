@@ -5,11 +5,11 @@ from Dmail.mixin import EmailBase
 
 
 class MimeBaseMixin(EmailBase):
-    def __init__(self, sender_email, *args, **kwargs):
+    def __init__(self, sender_email, **kwargs):
         self.message = None
         self.sess_uuid = None
         self.recreate_message_after_send = True
-        super(MimeBaseMixin, self).__init__(*args, sender_email=sender_email, **kwargs)
+        super(MimeBaseMixin, self).__init__(sender_email=sender_email, **kwargs)
 
     # interface
     def add_attachments(self, attachments, *args, **kwargs):
