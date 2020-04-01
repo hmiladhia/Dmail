@@ -25,6 +25,7 @@ class HtmlMixin(MimeBaseMixin):
     def __init__(self, alt_text_getter=None, **kwargs):
         super(HtmlMixin, self).__init__(**kwargs)
         self.__get_alt_text = alt_text_getter or html2text
+        self.alt_text_auto_add = True
 
     def _process_text(self, text, subtype, **kwargs):
         if subtype == 'html':
@@ -43,4 +44,5 @@ class HtmlMixin(MimeBaseMixin):
         return self.__html_img_regex.sub(self._md_add_img, text)
 
     def __add_alt_text(self, alt_text):
-        self.add_text(alt_text, 'plain')
+        if self.alt_text_auto_add:
+            self.add_text(alt_text, 'plain')
