@@ -6,10 +6,11 @@ from Dmail.mixin import HtmlMixin
 
 
 class MarkdownMixin(HtmlMixin):
-    def __init__(self, sender_email, md_extensions=None, styles=None, **kwargs):
+    def __init__(self, sender_email, md_extensions=None, styles=None, wrapper_id=None, **kwargs):
         super(MarkdownMixin, self).__init__(sender_email=sender_email, **kwargs)
         self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes'])
         self.styles = styles or []
+        self.wrapper_id = wrapper_id
 
     def _process_text(self, text, subtype, **kwargs):
         if subtype == 'md':
@@ -21,7 +22,10 @@ class MarkdownMixin(HtmlMixin):
     def __get_text_with_style(self, text):
         styles = '\n'.join(self.__get_styles(self.styles))
         if styles:
-            return f'<html><head><style type="text/css">{styles}</style></head><body>{text}</body></html>'
+            wrapper_start = f'<div id="{self.wrapper_id}">' if self.wrapper_id else ''
+            wrapper_end = f'</div>' if self.wrapper_id else ''
+            return (f'<html><head><style type="text/css">{styles}</style></head>'
+                    f'<body>{wrapper_start}{text}{wrapper_end}</body></html>')
         else:
             return text
 
