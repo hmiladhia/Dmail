@@ -7,7 +7,7 @@
   "long_description": "${read_file[README.md]}",
   "long_description_content_type": "text/markdown",
   "url": "https://github.com/hmiladhia/Dmail",
-  "packages": ["Dmail", "Dmail.esp", "Dmail.mixin"],
+  "packages": ["Dmail", "Dmail.esp", "Dmail.mixin", "Dmail.api"],
   "keywords": "email mail markdown md html style css",
   "install_requires": ["markdown", "html2text"],
   "extras_require": {
