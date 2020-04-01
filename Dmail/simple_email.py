@@ -1,6 +1,5 @@
-from Dmail.mixin.smtp_mixin import SmtpMixin
-from Dmail.mixin.mime_mixin import MimeMixin
+from Dmail.mixin import HtmlMixin, MimeMixin, SmtpMixin
 
 
-class SimpleEmail(MimeMixin, SmtpMixin):
+class SimpleEmail(HtmlMixin, MimeMixin, SmtpMixin):
     pass

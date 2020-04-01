@@ -1,6 +1,6 @@
 import re
 
-from html2text import html2text
+import html2text
 
 from Dmail.mixin import MimeBaseMixin
 
@@ -24,7 +24,9 @@ class HtmlMixin(MimeBaseMixin):
 
     def __init__(self, alt_text_getter=None, **kwargs):
         super(HtmlMixin, self).__init__(**kwargs)
-        self.__get_alt_text = alt_text_getter or html2text
+        self.html2text = html2text.HTML2Text()
+        self.html2text.ignore_emphasis = True
+        self.__get_alt_text = alt_text_getter if alt_text_getter else self.html2text.handle
         self.alt_text_auto_add = True
 
     def _process_text(self, text, subtype, **kwargs):

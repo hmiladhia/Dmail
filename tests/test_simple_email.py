@@ -22,7 +22,7 @@ def test_email_base_send_text(dmail, config, mocker):
     mocked_email = mocker.patch.object(dmail.server, 'sendmail')
     message, subject = 'abc', 'subject'
     dmail.send(message, config.receiver, subject)
-    expected_msg_regex = (r'Content-Type: multipart/mixed; boundary="===============\d+=="''\n'
+    expected_msg_regex = (r'Content-Type: multipart/alternative; boundary="===============\d+=="''\n'
                           r'MIME-Version: 1\.0' '\n'
                           f'From: {config.email.sender_email}' '\n'
                           f'Subject: {subject}' '\n'
@@ -41,11 +41,16 @@ def test_email_base_send_html(dmail, config, mocker):
     message, subject = 'abc', 'subject'
     html_msg = f'<strong>{message}</strong>'
     dmail.send(html_msg, config.receiver, subject, subtype='html')
-    expected_msg_regex = (r'Content-Type: multipart/mixed; boundary="===============\d+=="''\n*'
+    expected_msg_regex = (r'Content-Type: multipart/alternative; boundary="===============\d+=="''\n*'
                           r'MIME-Version: 1\.0' '\n*'
                           f'From: {config.email.sender_email}' '\n*'
                           f'Subject: {subject}' '\n*'
                           f'To: {config.receiver}' '\n*'
+                          r'--===============\d+==' '\n'
+                          'Content-Type: text/plain; charset="us-ascii"' '\n*'
+                          r'MIME-Version: 1\.0' '\n*'
+                          'Content-Transfer-Encoding: 7bit' '\n*'
+                          f'{message}' '\n*'
                           r'--===============\d+==' '\n'
                           'Content-Type: text/html; charset="us-ascii"' '\n'
                           r'MIME-Version: 1\.0' '\n'
