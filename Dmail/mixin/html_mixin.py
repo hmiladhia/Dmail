@@ -1,7 +1,7 @@
 import re
 
 import html2text
-from premailer import transform
+from premailer import Premailer
 
 from Dmail.mixin import MimeBaseMixin
 
@@ -23,11 +23,13 @@ class HtmlMixin(MimeBaseMixin):
                             f"{__tld_regex}"
                             r"(:\d+)?((/([~\w#+%@./_-]+))?(\?[\w+%@&\[\];=_-]+)?)?)")
 
-    def __init__(self, alt_text_getter=None, **kwargs):
+    def __init__(self, alt_text_getter=None, use_premailer=True, **kwargs):
         super(HtmlMixin, self).__init__(**kwargs)
         self.html2text = html2text.HTML2Text()
         self.html2text.ignore_emphasis = True
         self.__get_alt_text = alt_text_getter if alt_text_getter else self.html2text.handle
+        self.premailer = Premailer()
+        self.use_premailer = use_premailer
         self.alt_text_auto_add = True
 
     def _process_text(self, text, subtype, **kwargs):
@@ -45,7 +47,8 @@ class HtmlMixin(MimeBaseMixin):
 
     def _process_html(self, text):
         text = self.__html_img_regex.sub(self._md_add_img, text)
-        text = transform(text)
+        if self.use_premailer:
+            text = self.premailer.transform(text)
         return text
 
     def __add_alt_text(self, alt_text):
