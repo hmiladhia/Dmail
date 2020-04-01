@@ -1,6 +1,7 @@
 import re
 
 import html2text
+from premailer import transform
 
 from Dmail.mixin import MimeBaseMixin
 
@@ -43,7 +44,9 @@ class HtmlMixin(MimeBaseMixin):
         return f"{match.group(1)}cid:{self.add_image(file)}{match.group(3)}"
 
     def _process_html(self, text):
-        return self.__html_img_regex.sub(self._md_add_img, text)
+        text = self.__html_img_regex.sub(self._md_add_img, text)
+        text = transform(text)
+        return text
 
     def __add_alt_text(self, alt_text):
         if self.alt_text_auto_add:
