@@ -177,7 +177,7 @@ pre > code {
   border: none;
   background: transparent; }
 
-.highlight pre {
+.codehilite pre {
   background-color: #f8f8f8;
   border: 1px solid #ccc;
   font-size: 13px;
@@ -290,119 +290,119 @@ sub {
       background: #252a2a; }
     .inverted a {
       color: #acd1d5; } }
-.highlight .c {
+.codehilite .c {
   color: #998;
   font-style: italic; }
-.highlight .err {
+.codehilite .err {
   color: #a61717;
   background-color: #e3d2d2; }
-.highlight .k, .highlight .o {
+.codehilite .k, .codehilite .o {
   font-weight: bold; }
-.highlight .cm {
+.codehilite .cm {
   color: #998;
   font-style: italic; }
-.highlight .cp {
+.codehilite .cp {
   color: #999;
   font-weight: bold; }
-.highlight .c1 {
+.codehilite .c1 {
   color: #998;
   font-style: italic; }
-.highlight .cs {
+.codehilite .cs {
   color: #999;
   font-weight: bold;
   font-style: italic; }
-.highlight .gd {
+.codehilite .gd {
   color: #000;
   background-color: #fdd; }
-  .highlight .gd .x {
+  .codehilite .gd .x {
     color: #000;
     background-color: #faa; }
-.highlight .ge {
+.codehilite .ge {
   font-style: italic; }
-.highlight .gr {
+.codehilite .gr {
   color: #a00; }
-.highlight .gh {
+.codehilite .gh {
   color: #999; }
-.highlight .gi {
+.codehilite .gi {
   color: #000;
   background-color: #dfd; }
-  .highlight .gi .x {
+  .codehilite .gi .x {
     color: #000;
     background-color: #afa; }
-.highlight .go {
+.codehilite .go {
   color: #888; }
-.highlight .gp {
+.codehilite .gp {
   color: #555; }
-.highlight .gs {
+.codehilite .gs {
   font-weight: bold; }
-.highlight .gu {
+.codehilite .gu {
   color: #800080;
   font-weight: bold; }
-.highlight .gt {
+.codehilite .gt {
   color: #a00; }
-.highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr {
+.codehilite .kc, .codehilite .kd, .codehilite .kn, .codehilite .kp, .codehilite .kr {
   font-weight: bold; }
-.highlight .kt {
+.codehilite .kt {
   color: #458;
   font-weight: bold; }
-.highlight .m {
+.codehilite .m {
   color: #099; }
-.highlight .s {
+.codehilite .s {
   color: #d14; }
-.highlight .na {
+.codehilite .na {
   color: #008080; }
-.highlight .nb {
+.codehilite .nb {
   color: #0086B3; }
-.highlight .nc {
+.codehilite .nc {
   color: #458;
   font-weight: bold; }
-.highlight .no {
+.codehilite .no {
   color: #008080; }
-.highlight .ni {
+.codehilite .ni {
   color: #800080; }
-.highlight .ne, .highlight .nf {
+.codehilite .ne, .codehilite .nf {
   color: #900;
   font-weight: bold; }
-.highlight .nn {
+.codehilite .nn {
   color: #555; }
-.highlight .nt {
+.codehilite .nt {
   color: #000080; }
-.highlight .nv {
+.codehilite .nv {
   color: #008080; }
-.highlight .ow {
+.codehilite .ow {
   font-weight: bold; }
-.highlight .w {
+.codehilite .w {
   color: #bbb; }
-.highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo {
+.codehilite .mf, .codehilite .mh, .codehilite .mi, .codehilite .mo {
   color: #099; }
-.highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx {
+.codehilite .sb, .codehilite .sc, .codehilite .sd, .codehilite .s2, .codehilite .se, .codehilite .sh, .codehilite .si, .codehilite .sx {
   color: #d14; }
-.highlight .sr {
+.codehilite .sr {
   color: #009926; }
-.highlight .s1 {
+.codehilite .s1 {
   color: #d14; }
-.highlight .ss {
+.codehilite .ss {
   color: #990073; }
-.highlight .bp {
+.codehilite .bp {
   color: #999; }
-.highlight .vc, .highlight .vg, .highlight .vi {
+.codehilite .vc, .codehilite .vg, .codehilite .vi {
   color: #008080; }
-.highlight .il {
+.codehilite .il {
   color: #099; }
-.highlight .gc {
+.codehilite .gc {
   color: #999;
   background-color: #EAF2F5; }
 
-.type-csharp .highlight .k, .type-csharp .highlight .kt {
+.type-csharp .codehilite .k, .type-csharp .codehilite .kt {
   color: #00F; }
-.type-csharp .highlight .nf {
+.type-csharp .codehilite .nf {
   color: #000;
   font-weight: normal; }
-.type-csharp .highlight .nc {
+.type-csharp .codehilite .nc {
   color: #2B91AF; }
-.type-csharp .highlight .nn {
+.type-csharp .codehilite .nn {
   color: #000; }
-.type-csharp .highlight .s, .type-csharp .highlight .sc {
+.type-csharp .codehilite .s, .type-csharp .codehilite .sc {
   color: #A31515; }
 
 body.dark #wrapper {

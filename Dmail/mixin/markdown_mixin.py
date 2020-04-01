@@ -8,7 +8,8 @@ from Dmail.mixin import HtmlMixin
 class MarkdownMixin(HtmlMixin):
     def __init__(self, sender_email, md_extensions=None, styles=None, default_styles='default', wrapper_id=None, **kwargs):
         super(MarkdownMixin, self).__init__(sender_email=sender_email, **kwargs)
-        self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes'])
+        self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes',
+                                                                        'codehilite'])
         self.styles = styles or []
         self.default_styles = default_styles
         self.wrapper_id = wrapper_id
