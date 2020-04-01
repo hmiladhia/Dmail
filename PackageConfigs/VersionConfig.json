@@ -5,7 +5,7 @@
   "__version": {
     "__major": 1,
     "__minor": 2,
-    "__patch": 0
+    "__patch": 1
   },
   "version": "${__version.__major}.${__version.__minor}.${__version.__patch}"
 }

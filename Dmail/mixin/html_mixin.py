@@ -1,5 +1,7 @@
 import re
 
+from html2text import html2text
+
 from Dmail.mixin import MimeBaseMixin
 
 
@@ -20,10 +22,15 @@ class HtmlMixin(MimeBaseMixin):
                             f"{__tld_regex}"
                             r"(:\d+)?((/([~\w#+%@./_-]+))?(\?[\w+%@&\[\];=_-]+)?)?)")
 
-    def _process_text(self, text, subtype):
+    def __init__(self, alt_text_getter=None, **kwargs):
+        super(HtmlMixin, self).__init__(**kwargs)
+        self.__get_alt_text = alt_text_getter or html2text
+
+    def _process_text(self, text, subtype, **kwargs):
         if subtype == 'html':
-            text = self.__html_img_regex.sub(self._md_add_img, text)
-        return super(HtmlMixin, self)._process_text(text, subtype)
+            text = self._process_html(text)
+            self.__add_alt_text(kwargs.pop('alt_text', self.__get_alt_text(text)))
+        return super(HtmlMixin, self)._process_text(text, subtype, **kwargs)
 
     # utils
     def _md_add_img(self, match):
@@ -31,3 +38,9 @@ class HtmlMixin(MimeBaseMixin):
         if file.startswith('cid') or self._url_regex.fullmatch(file):
             return f"{match.group(1)}{file}{match.group(3)}"
         return f"{match.group(1)}cid:{self.add_image(file)}{match.group(3)}"
+
+    def _process_html(self, text):
+        return self.__html_img_regex.sub(self._md_add_img, text)
+
+    def __add_alt_text(self, alt_text):
+        self.add_text(alt_text, 'plain')

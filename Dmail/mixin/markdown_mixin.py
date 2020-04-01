@@ -11,11 +11,12 @@ class MarkdownMixin(HtmlMixin):
         self._markdown = markdown.Markdown(extensions=md_extensions or ['tables', 'fenced_code', 'footnotes'])
         self.styles = styles or []
 
-    def _process_text(self, text, subtype):
+    def _process_text(self, text, subtype, **kwargs):
         if subtype == 'md':
+            kwargs.setdefault('alt_text', text)
             text, subtype = self._markdown.convert(text), 'html'
             text = self.__get_text_with_style(text)
-        return super(MarkdownMixin, self)._process_text(text, subtype)
+        return super(MarkdownMixin, self)._process_text(text, subtype, **kwargs)
 
     def __get_text_with_style(self, text):
         styles = '\n'.join(self.__get_styles(self.styles))

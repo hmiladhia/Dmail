@@ -12,7 +12,7 @@ from Dmail.mixin import MimeBaseMixin
 
 class MimeMixin(MimeBaseMixin):
     def new_message(self):
-        self.message = MIMEMultipart()
+        self.message = MIMEMultipart('alternative')
 
     def _add_text(self, text, subtype):
         self.message.attach(MIMEText(text, subtype))
