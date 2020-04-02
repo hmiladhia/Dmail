@@ -24,7 +24,7 @@ def test_email_send_md(dmail, config, mocker):
     mocked_add_msg = mocker.spy(dmail, '_add_text')
     message, subject = 'abc', 'subject'
     dmail.send(message, config.receiver, 'hello')
-    mocked_add_msg.assert_called_with(f'<p>{message}</p>', 'html')
+    mocked_add_msg.assert_called_with(String(f'.*<p style=".*">{message}</p>.*', re.S), 'html')
 
 
 def test_email_send_table(dmail, config, mocker):
@@ -34,7 +34,7 @@ def test_email_send_table(dmail, config, mocker):
                '| Content1 | Content2 | Content3 |''\n')
 
     dmail.send(message, config.receiver, 'hello')
-    mocked_add_msg.assert_called_with(String(r'<table>.*</table>', re.S), 'html')
+    mocked_add_msg.assert_called_with(String(r'.*<table style=".*">.*</table>.*', re.S), 'html')
 
 
 def test_email_send_code(dmail, config, mocker):
@@ -44,7 +44,7 @@ def test_email_send_code(dmail, config, mocker):
                '    return True''\n'
                '```')
     dmail.send(message, config.receiver, 'hello')
-    mocked_add_msg.assert_called_with(String(r'.*<code>.*</code>.*', re.S), 'html')
+    mocked_add_msg.assert_called_with(String(r'.*<pre style=".*">.*</pre>.*', re.S), 'html')
 
 
 def test_email_send_python_code(dmail, config, mocker):
@@ -54,7 +54,7 @@ def test_email_send_python_code(dmail, config, mocker):
                '    return True''\n'
                '```')
     dmail.send(message, config.receiver, 'hello')
-    mocked_add_msg.assert_called_with(String(r'.*<code class="python">.*</code>.*', re.S), 'html')
+    mocked_add_msg.assert_called_with(String(r'.*<pre style=".*">.*</pre>.*', re.S), 'html')
 
 
 def test_email_send_footnote(dmail, config, mocker):
@@ -69,7 +69,8 @@ def test_email_send_image(dmail, config, mocker):
     message = r'![test image](files\another_image.jpg)'
     dmail.send(message, config.receiver, 'Image')
     uuid_regex = r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
-    mocked_add_msg.assert_called_with(String(f'.*<img alt="test image" src="cid:{uuid_regex}" />.*'), 'html')
+    mocked_add_msg.assert_called_with(String(f'.*<img alt="test image" src="cid:{uuid_regex}" style=".*"/?>.*', re.S),
+                                      'html')
 
 
 def test_email_send_missing_image_error(dmail, config):
@@ -85,10 +86,11 @@ def test_email_send_missing_image_error(dmail, config):
 def test_email_send_url_image(dmail, config, mocker, url):
     mocked_add_msg = mocker.spy(dmail, '_add_text')
     dmail.send(f'![Dmail Gif]({url})', config.receiver, 'Image')
-    mocked_add_msg.assert_called_with(String(f'.*<img alt="Dmail Gif" src="{re.escape(url)}" />.*'), 'html')
+    mocked_add_msg.assert_called_with(String(f'.*<img alt="Dmail Gif" src="{re.escape(url)}" style=".*"'
+                                             f'/?>.*', re.S), 'html')
 
 
 def test_email_send_from_file(dmail, config, mocker):
     mocked_add_msg = mocker.spy(dmail, '_add_text')
     dmail.send_from_file(r'files\my_message.md', config.receiver, 'File')
-    mocked_add_msg.assert_called_with('<h1>Title</h1>\n<p>content</p>', 'html')
+    mocked_add_msg.assert_called_with(String('.*<h1 style=".*">Title</h1>\n<p style=".*">content</p>.*', re.S), 'html')
