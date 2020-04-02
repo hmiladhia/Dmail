@@ -13,6 +13,10 @@ A simple pip install will do :
 ```bash
 python -m pip install Dmail
 ```
+If you want support for code highlighting with pygments:
+```bash
+python -m pip install Dmail[CodeHighlight]
+```
 
 ## How to use:
 
