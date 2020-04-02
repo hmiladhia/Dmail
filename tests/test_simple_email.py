@@ -55,7 +55,7 @@ def test_email_base_send_html(dmail, config, mocker):
                           'Content-Type: text/html; charset="us-ascii"' '\n'
                           r'MIME-Version: 1\.0' '\n'
                           'Content-Transfer-Encoding: 7bit' '\n' '\n'
-                          f'{html_msg}' '\n'
+                          f'.*<strong\\s*.*>{message}</strong>.*' '\n'
                           r'--===============\d+==--' '\n')
 
     mocked_email.assert_called_with(config.email.sender_email, [config.receiver], String(expected_msg_regex, re.S))
