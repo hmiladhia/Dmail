@@ -14,6 +14,7 @@
     "GmailApi":  ["google-api-python-client", "google-auth-httplib2", "google-auth-oauthlib"],
     "CodeHighlight": ["Pygments"]
   },
+  "include_package_data": true,
   "classifiers": [ 
     "Programming Language :: Python :: 3", 
     "License :: OSI Approved :: MIT License", 
