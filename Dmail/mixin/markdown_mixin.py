@@ -44,5 +44,5 @@ class MarkdownMixin(HtmlMixin):
         else:
             s = []
             for style in styles:
-                s.extend(cls.__load_styles(style))
+                s.extend(cls.__load_styles(style, default=default))
             return s
