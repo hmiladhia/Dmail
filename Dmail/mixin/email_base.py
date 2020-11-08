@@ -42,7 +42,7 @@ class EmailBase(ABC):
 
     def get_message(self, email_text=None, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
         email_body = f"""\
-        Subject: Hi Mailtrap
+        Subject: {subject}
         To: {to}
         From: {self.sender_email}
         {email_text}"""
