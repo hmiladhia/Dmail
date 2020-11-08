@@ -1,6 +1,6 @@
 {
 	"email": {
-	"mail_server": "smtp.gmail.com",
+	"mail_server": "${os_environ[server]}",
 	"mail_port": 587,
 	"sender_email": "${os_environ[user]}",
 	"sender_credentials": "${os_environ[password]}",
