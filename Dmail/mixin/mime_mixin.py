@@ -41,9 +41,16 @@ class MimeMixin(MimeBaseMixin):
 
     def add_image(self, img_path):
         with open(img_path, 'rb') as fp:
-            img = MIMEImage(fp.read())
+            content_type, _ = mimetypes.guess_type(img_path)
+            if content_type:
+                _, sub_type = content_type.split('/', 1)
+                img = MIMEImage(fp.read(), sub_type)
+            else:
+                img = MIMEImage(fp.read())
         img_uuid = super(MimeMixin, self).add_image(img_path)
         img.add_header('Content-ID', f"<{img_uuid}>")
+        img.add_header('Content-Disposition', 'attachment', filename=os.path.basename(img_path))
+
         self.message.attach(img)
         return img_uuid
 
