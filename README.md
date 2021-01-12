@@ -128,3 +128,8 @@ with GmailApi(sender_email, 'token.pickle') as email:
     email.create_draft(message, recipient_email, '[Dmail] Gmail Api - draft')
 ```
 
+
+If you like the project and want to support us, you can buy us a coffee here:
+
+<a href="https://www.buymeacoffee.com/amal.hasni" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
