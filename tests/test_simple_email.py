@@ -59,3 +59,28 @@ def test_email_base_send_html(dmail, config, mocker):
                           r'--===============\d+==--' '\n')
 
     mocked_email.assert_called_with(config.email.sender_email, [config.receiver], String(expected_msg_regex, re.S))
+
+
+def test_email_base_send_html_sender(dmail, config, mocker):
+    mocked_email = mocker.patch.object(dmail.server, 'sendmail')
+    message, subject = 'abc', 'subject'
+    html_msg = f'<strong>{message}</strong>'
+    dmail.send(html_msg, config.receiver, subject, subtype='html', sender='cusom@email.com')
+    expected_msg_regex = (r'Content-Type: multipart/alternative; boundary="===============\d+=="''\n*'
+                          r'MIME-Version: 1\.0' '\n*'
+                          f'From: cusom@email.com' '\n*'
+                          f'Subject: {subject}' '\n*'
+                          f'To: {config.receiver}' '\n*'
+                          r'--===============\d+==' '\n'
+                          'Content-Type: text/plain; charset="us-ascii"' '\n*'
+                          r'MIME-Version: 1\.0' '\n*'
+                          'Content-Transfer-Encoding: 7bit' '\n*'
+                          f'{message}' '\n*'
+                          r'--===============\d+==' '\n'
+                          'Content-Type: text/html; charset="us-ascii"' '\n'
+                          r'MIME-Version: 1\.0' '\n'
+                          'Content-Transfer-Encoding: 7bit' '\n' '\n'
+                          f'.*<strong\\s*.*>{message}</strong>.*' '\n'
+                          r'--===============\d+==--' '\n')
+
+    mocked_email.assert_called_with(config.email.sender_email, [config.receiver], String(expected_msg_regex, re.S))
