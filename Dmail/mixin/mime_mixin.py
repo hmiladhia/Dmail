@@ -54,8 +54,8 @@ class MimeMixin(MimeBaseMixin):
         self.message.attach(img)
         return img_uuid
 
-    def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
-        self.__add_header("From", self.sender_email)
+    def _set_header(self, to=None, subject=None, cc=None, bcc=None, sender=None, **kwargs):
+        self.__add_header("From", sender or self.sender_email)
         self.__add_header('Subject', subject)
         self.__add_header('cc', ','.join(self._recipient_to_list(cc)))
         self.__add_header("To", ','.join(self._recipient_to_list(to)))
