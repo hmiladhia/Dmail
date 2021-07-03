@@ -17,12 +17,12 @@ class EmailBase(ABC):
     def quit(self):
         pass
 
-    def send(self, email_text, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
+    def send(self, email_text, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None, sender=None):
         subtype = subtype or self.default_subtype
         self._pre_send(email_text, to=to, subject=subject, cc=cc, bcc=bcc, subtype=subtype, attachments=attachments)
         email_recipients = self._get_email_recipients(to, cc=cc, bcc=bcc)
         email_body = self.get_message(email_text, to=to, subject=subject, cc=cc, bcc=bcc,
-                                      subtype=subtype, attachments=attachments)
+                                      subtype=subtype, attachments=attachments, sender=sender)
         self.sendmail(email_recipients, email_body)
         self._post_send(email_text, to=to, subject=subject, cc=cc, bcc=bcc, subtype=subtype, attachments=attachments)
 
@@ -40,7 +40,8 @@ class EmailBase(ABC):
     def sendmail(self, recipients, message):
         pass
 
-    def get_message(self, email_text=None, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
+    def get_message(self, email_text=None, to=None, subject=None, cc=None, bcc=None,
+                    subtype=None, attachments=None, sender=None):
         email_body = f"""\
         Subject: {subject}
         To: {to}

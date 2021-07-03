@@ -47,8 +47,9 @@ class MimeBaseMixin(EmailBase):
         self.sess_uuid = None
         super(MimeBaseMixin, self).quit()
 
-    def get_message(self, email_text=None, to=None, subject=None, cc=None, bcc=None, subtype=None, attachments=None):
-        self._set_header(to=to, subject=subject, cc=cc, bcc=bcc)
+    def get_message(self, email_text=None, to=None, subject=None, cc=None, bcc=None,
+                    subtype=None, attachments=None, sender=None):
+        self._set_header(to=to, subject=subject, cc=cc, bcc=bcc, sender=sender)
         self._add_message_content(email_text, subtype, attachments)
         return self._get_converted_message()
 
@@ -64,7 +65,7 @@ class MimeBaseMixin(EmailBase):
         if self.recreate_message_after_send:
             self.new_message()
 
-    def _set_header(self, to=None, subject=None, cc=None, bcc=None, **kwargs):
+    def _set_header(self, to=None, subject=None, cc=None, bcc=None, sender=None, **kwargs):
         pass
 
     def _process_text(self, text, subtype):
