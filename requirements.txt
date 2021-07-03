@@ -1,0 +1,4 @@
+html2text==2020.1.16
+Markdown==3.3.3
+premailer==3.7.0
+Pygments==2.7.2
