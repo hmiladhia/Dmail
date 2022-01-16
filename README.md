@@ -1,4 +1,9 @@
 # Dmail
+![PyPI - License](https://img.shields.io/pypi/l/dmail)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dmail)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/dmail)
+![PyPI](https://img.shields.io/pypi/v/dmail)
+[![Downloads](https://pepy.tech/badge/dmail)](https://pepy.tech/project/dmail)
 
 This is a simple package that provides a simple way to send emails through code.
 
@@ -11,11 +16,11 @@ By default, the content of the mail should be written  in **markdown**
 A simple pip install will do :
 
 ```bash
-python -m pip install Dmail
+pip install Dmail
 ```
 If you want support for code highlighting with pygments:
 ```bash
-python -m pip install Dmail[CodeHighlight]
+pip install Dmail[CodeHighlight]
 ```
 
 ## How to use:
@@ -95,7 +100,7 @@ with Email(mail_server, mail_port, sender_email, password) as email:
 To use the Gmail Api you need to install extra packages :
 
 ```bash
-python -m pip install Dmail[GmailApi]
+pip install Dmail[GmailApi]
 ```
 
 ##### First use
